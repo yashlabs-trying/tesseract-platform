@@ -44,13 +44,15 @@ class ConstraintValidator:
         if deployment.expected_memory_mb is None:
             return ConstraintCheck(name="memory_capacity", result=ConstraintResult.UNKNOWN,
                                    details="Deployment has no expected memory requirement")
-        if gpu.available_memory_mb is not None and deployment.expected_memory_mb <= gpu.available_memory_mb:
-            return ConstraintCheck(name="memory_capacity", result=ConstraintResult.PASS)
-        if deployment.expected_memory_mb <= gpu.memory_capacity_mb:
+        # Use available_memory_mb if provided (more accurate), fall back to capacity_mb
+        available = gpu.available_memory_mb or gpu.memory_capacity_mb
+        # Alternative's expected_memory_mb already includes replica count scaling
+        required = deployment.expected_memory_mb
+        if required <= available:
             return ConstraintCheck(name="memory_capacity", result=ConstraintResult.PASS)
         return ConstraintCheck(
             name="memory_capacity", result=ConstraintResult.FAIL,
-            details=f"Deployment needs {deployment.expected_memory_mb}MB, GPU {gpu.gpu_model} has {gpu.memory_capacity_mb}MB"
+            details=f"Deployment needs {required}MB, GPU {gpu.gpu_model} has {available}MB available"
         )
 
     def _check_exclusive_allocation(self, gpu: GPUInventory, policy: TenantPolicy) -> ConstraintCheck:
@@ -71,11 +73,14 @@ class ConstraintValidator:
         return ConstraintCheck(name="gpu_compatibility", result=ConstraintResult.PASS)
 
     def _check_tenant_quota(self, policy: TenantPolicy, deployment: ModelDeployment) -> ConstraintCheck:
-        if policy.max_concurrent_workers is not None and deployment.worker_count > policy.max_concurrent_workers:
-            return ConstraintCheck(
-                name="tenant_quota", result=ConstraintResult.FAIL,
-                details=f"Tenant max workers {policy.max_concurrent_workers}, requested {deployment.worker_count}"
-            )
+        # Check against the deployment's expected worker count from the scenario
+        # The per-alternative replica check is done in the optimizer's candidate generator
+        if policy.max_concurrent_workers is not None:
+            if deployment.worker_count > policy.max_concurrent_workers:
+                return ConstraintCheck(
+                    name="tenant_quota", result=ConstraintResult.FAIL,
+                    details=f"Tenant max workers {policy.max_concurrent_workers}, deployment has {deployment.worker_count}"
+                )
         return ConstraintCheck(name="tenant_quota", result=ConstraintResult.PASS)
 
     def _check_health(self, gpu: GPUInventory) -> ConstraintCheck:

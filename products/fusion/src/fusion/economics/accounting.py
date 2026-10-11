@@ -39,6 +39,9 @@ class CostAccountingEngine:
     ) -> Decimal:
         return alternative.estimated_cost_per_hour * Decimal(str(hours))
 
+    def compute_hourly_cost(self, gpus: List[GPUInventory]) -> Decimal:
+        return sum((g.resource_cost_per_hour for g in gpus), Decimal("0"))
+
 
 class RevenueCalculator:
     def estimate_revenue(
@@ -68,19 +71,30 @@ class MarginAnalyzer:
         baseline: ExpectedOutcome,
         candidate: ExpectedOutcome,
     ) -> Dict[str, str]:
-        diff = candidate.expected_contribution_margin - baseline.expected_contribution_margin if (
-            baseline.expected_contribution_margin is not None and
-            candidate.expected_contribution_margin is not None
-        ) else None
+        bm = baseline.expected_contribution_margin
+        cm = candidate.expected_contribution_margin
+        diff = cm - bm if (bm is not None and cm is not None) else None
         result = {
-            "baseline_margin": str(baseline.expected_contribution_margin or "N/A"),
-            "candidate_margin": str(candidate.expected_contribution_margin or "N/A"),
+            "baseline_margin": str(bm) if bm is not None else "N/A",
+            "candidate_margin": str(cm) if cm is not None else "N/A",
             "margin_difference": str(diff) if diff is not None else "N/A",
         }
-        if diff is not None and diff > 0:
-            result["verdict"] = "candidate_improves_margin"
-        elif diff is not None and diff < 0:
-            result["verdict"] = "baseline_superior"
+        if diff is not None:
+            if diff > 0:
+                result["verdict"] = "candidate_improves_margin"
+            elif diff < 0:
+                result["verdict"] = "baseline_superior"
+            else:
+                result["verdict"] = "no_difference"
         else:
-            result["verdict"] = "no_difference"
+            result["verdict"] = "insufficient_data"
         return result
+
+    def net_marginal_benefit(self, baseline: ExpectedOutcome, candidate: ExpectedOutcome) -> str:
+        result = self.compare_alternatives(baseline, candidate)
+        diff = result.get("margin_difference", "N/A")
+        if diff != "N/A" and result["verdict"] == "candidate_improves_margin":
+            return f"Recommended plan improves contribution by {diff}"
+        elif result["verdict"] == "baseline_superior":
+            return f"Current allocation remains superior by {diff}"
+        return "No material difference between plans"

@@ -32,20 +32,22 @@ class OptimizationEngine:
         demands: Dict[str, WorkloadDemand],
         scenario: Optional[OptimizationScenario] = None,
     ) -> FusionRecommendation:
+        # Build lookup: only by gpu_id to avoid collisions
         gpu_map = {g.gpu_id: g for g in gpus}
-        gpu_map.update({g.gpu_model: g for g in gpus})
-        gpu_map.update({g.cluster_id: g for g in gpus})
 
         recommended_plan: List[DeploymentAlternative] = []
         baseline_plan: List[DeploymentAlternative] = []
         alternative_lists: list = []
         rejected: List[str] = []
         rejected_reasons: Dict[str, str] = {}
-        all_constraint_checks: Dict[str, str] = {}
+        constraint_warnings: Dict[str, List[str]] = {}
+
         total_baseline_revenue = Decimal("0")
         total_baseline_cost = Decimal("0")
+        total_baseline_contribution = Decimal("0")
         total_rec_revenue = Decimal("0")
         total_rec_cost = Decimal("0")
+        total_rec_contribution = Decimal("0")
 
         for dep in deployments:
             policy = tenant_policies.get(dep.tenant_id, TenantPolicy(tenant_id=dep.tenant_id))
@@ -59,53 +61,114 @@ class OptimizationEngine:
 
             validated_alts: List[Tuple[DeploymentAlternative, ExpectedOutcome]] = []
             for alt in alternatives:
-                gpu = gpu_map.get(alt.gpu_pool_id) or gpu_map.get(alt.gpu_type)
+                gpu = gpu_map.get(alt.gpu_pool_id)
                 checks = []
-                if gpu:
-                    checks = self._constraint_validator.validate_all(alt, gpu, dep, policy, profile)
+
+                # When no GPU matched, still record it but with a FAIL
+                if gpu is None:
+                    if alt.gpu_pool_id == "__baseline__":
+                        # Baseline: allow through without GPU check
+                        outcome = self._evaluator.evaluate(alt, None, dep, policy, profile)
+                        validated_alts.append((alt, outcome))
+                        continue
+                    else:
+                        rejected.append(alt.gpu_pool_id)
+                        rejected_reasons[alt.gpu_pool_id] = "No matching GPU found in inventory"
+                        continue
+
+                checks = self._constraint_validator.validate_all(alt, gpu, dep, policy, profile)
                 failures = [c for c in checks if c.result == "fail"]
+                unknowns = [c for c in checks if c.result == "unknown"]
+
                 if not failures:
                     outcome = self._evaluator.evaluate(alt, gpu, dep, policy, profile)
                     validated_alts.append((alt, outcome))
+                    if unknowns:
+                        constraint_warnings.setdefault(alt.gpu_pool_id, [])
+                        for u in unknowns:
+                            constraint_warnings[alt.gpu_pool_id].append(
+                                f"UNKNOWN: {u.name} — {u.details}"
+                            )
                 else:
                     rejected.append(alt.gpu_pool_id)
                     rejected_reasons[alt.gpu_pool_id] = "; ".join(
-                        c.details or c.name for c in failures
+                        f"FAIL {c.name}: {c.details}" for c in failures
                     )
 
             if not validated_alts:
+                # No feasible alternative for this workload — skip
                 continue
 
-            validated_alts.sort(key=lambda x: x[1].expected_contribution_margin or Decimal("-inf"), reverse=True)
+            # Sort by contribution margin descending
+            validated_alts.sort(
+                key=lambda x: x[1].expected_contribution_margin or Decimal("-inf"),
+                reverse=True,
+            )
 
-            # Baseline = first alternative (usually current allocation)
-            baseline = validated_alts[0][1] if validated_alts else ExpectedOutcome()
-            baseline_alt = validated_alts[0][0] if validated_alts else None
-            if baseline_alt:
-                baseline_plan.append(baseline_alt)
-                total_baseline_revenue += baseline.expected_revenue
-                total_baseline_cost += baseline.expected_operating_cost
+            # Identify the baseline alternative (marked with "__baseline__")
+            baseline_entry: Optional[Tuple[DeploymentAlternative, ExpectedOutcome]] = None
+            best_entry: Optional[Tuple[DeploymentAlternative, ExpectedOutcome]] = None
 
-            # Recommended = best feasible alternative
-            recommended = validated_alts[0][1] if validated_alts else ExpectedOutcome()
-            rec_alt = validated_alts[0][0] if validated_alts else None
-            if rec_alt:
-                rec_alt = rec_alt.model_copy(update={"allocation_status": AllocationStatus.RECOMMENDED})
-                recommended_plan.append(rec_alt)
-                total_rec_revenue += recommended.expected_revenue
-                total_rec_cost += recommended.expected_operating_cost
+            for entry in validated_alts:
+                if entry[0].gpu_pool_id == "__baseline__":
+                    baseline_entry = entry
+                elif best_entry is None:
+                    best_entry = entry
 
-            alt_list = [a for a, _ in validated_alts[1:]]
-            alternative_lists.append(alt_list)
+            # If no explicit baseline found, use the first entry as baseline
+            if baseline_entry is None:
+                baseline_entry = validated_alts[0]
+
+            # If no better alternative found, keep baseline as recommended too
+            if best_entry is None:
+                best_entry = baseline_entry
+
+            baseline_alt, baseline_outcome = baseline_entry
+            rec_alt, rec_outcome = best_entry
+
+            baseline_plan.append(baseline_alt)
+            total_baseline_revenue += baseline_outcome.expected_revenue
+            total_baseline_cost += baseline_outcome.expected_operating_cost
+            if baseline_outcome.expected_contribution_margin is not None:
+                total_baseline_contribution += baseline_outcome.expected_contribution_margin
+
+            rec_alt = rec_alt.model_copy(update={"allocation_status": AllocationStatus.RECOMMENDED})
+            recommended_plan.append(rec_alt)
+            total_rec_revenue += rec_outcome.expected_revenue
+            total_rec_cost += rec_outcome.expected_operating_cost
+            if rec_outcome.expected_contribution_margin is not None:
+                total_rec_contribution += rec_outcome.expected_contribution_margin
+
+            # Other alternatives
+            other_alts = []
+            for a, _ in validated_alts:
+                if a.gpu_pool_id == "__baseline__":
+                    continue
+                if best_entry is not None and a is best_entry[0]:
+                    continue
+                other_alts.append(a)
+            alternative_lists.append(other_alts)
 
         baseline_econ = ExpectedOutcome(
             expected_revenue=total_baseline_revenue,
             expected_operating_cost=total_baseline_cost,
+            expected_contribution_margin=total_baseline_contribution,
         )
         rec_econ = ExpectedOutcome(
             expected_revenue=total_rec_revenue,
             expected_operating_cost=total_rec_cost,
+            expected_contribution_margin=total_rec_contribution,
         )
+
+        # Confidence depends on whether we have real demand/profiles
+        has_profiles = len(profiles) > 0
+        has_demand = len(demands) > 0
+        if has_profiles and has_demand:
+            confidence = 0.7
+        elif has_profiles or has_demand:
+            confidence = 0.5
+        else:
+            confidence = 0.3
 
         return FusionRecommendation(
             scenario_id=scenario.scenario_id if scenario else "default",
@@ -114,10 +177,14 @@ class OptimizationEngine:
             alternative_plans=alternative_lists,
             expected_economics=rec_econ,
             baseline_economics=baseline_econ,
-            confidence=0.7 if all(demands.values()) else 0.4,
+            confidence=confidence,
+            constraint_checks={k: "unknown" for k in constraint_warnings.keys()},
             rejected_alternatives=rejected,
             rejected_reasons=rejected_reasons,
+            risk_explanation="; ".join(
+                f"{k}: {', '.join(v)}" for k, v in constraint_warnings.items()
+            ) if constraint_warnings else None,
             approval_status=RecommendationStatus.ADVISORY_ONLY,
             execution_eligibility=False,
-            provenance={"optimizer_version": "0.1.0", "engine": "deterministic_candidate"},
+            provenance={"optimizer_version": "0.2.0", "engine": "deterministic_candidate_fixed"},
         )

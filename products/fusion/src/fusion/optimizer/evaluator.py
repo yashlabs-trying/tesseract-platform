@@ -26,19 +26,29 @@ class AlternativeEvaluator:
         cost = alternative.estimated_cost_per_hour
         revenue = alternative.estimated_revenue_per_hour or Decimal("0")
         risk = Decimal("0")
+        uncertainty = None
+        slo_violation = None
+
+        # Risk adjustment: no profile means higher uncertainty
         if profile is None or profile.evidence_type == "unknown":
             risk = cost * Decimal("0.2")
-        uncertainty = None
-        if profile is None:
-            uncertainty = "No performance profile available"
+            slo_violation = 0.10
+            uncertainty = "No performance profile — risk adjustment applied"
+        else:
+            slo_violation = 0.01
+
+        # Contribution margin = revenue - cost
+        contribution = revenue - cost
+
         return ExpectedOutcome(
             expected_revenue=revenue,
             expected_operating_cost=cost,
+            expected_contribution_margin=contribution,
             modeled_risk_adjustment=risk,
-            expected_p95_latency_ms=profile.ttft_p95_ms if profile else None,
+            expected_p95_latency_ms=profile.ttft_p50_ms if profile else None,
             expected_p99_latency_ms=profile.ttft_p99_ms if profile else None,
             uncertainty_description=uncertainty,
-            slo_violation_probability=0.05 if profile is None else 0.01,
+            slo_violation_probability=slo_violation,
         )
 
     def rank_alternatives(
