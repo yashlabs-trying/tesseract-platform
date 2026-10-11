@@ -1,0 +1,25 @@
+name: small-fleet
+description: Minimal fleet for testing
+seed: 42
+duration_hours: 1.0
+gpu_pools:
+  - gpu_model: H100
+    count: 2
+    memory_capacity_mb: 81920
+    cost_per_hour: 4.50
+    interconnect: nvlink
+    supported_isolation: [exclusive]
+workloads:
+  - name: test-llm
+    model_id: meta-llama/Llama-2-7b
+    tenant_id: test-tenant
+    priority: 5
+    base_rps: 10.0
+    burst_multiplier: 2.0
+    burst_probability: 0.1
+    expected_memory_mb: 16384
+    min_replicas: 1
+    max_replicas: 2
+    isolation_requirement: exclusive
+    warm_workers: 1
+    scale_to_zero_eligible: false

@@ -1,23 +1,68 @@
 # Tesseract Fusion
 
-Unified inference platform for next-generation AI solutions.
+GPU fleet economics and optimization platform.
 
-## Roadmap (5 Versions)
+Fusion determines **which feasible infrastructure decision delivers the greatest expected commercial benefit while honoring every mandatory operational and customer constraint**.
 
-| Version | Focus | Description |
-|---------|-------|-------------|
-| **v1** | Core Engine | Model loading, basic inference API, single-model serving |
-| **v2** | Optimization | Quantization (FP16/INT8/INT4), dynamic batching, KV cache |
-| **v3** | Multi-Modal Fusion | Text + Vision + Audio pipelines with cross-modal routing |
-| **v4** | Distributed Inference | Horizontal scaling, sharding, load balancing, multi-node |
-| **v5** | Production Suite | Monitoring, A/B testing, fleet management, dashboard |
+## Architecture
+
+```
+┌────────────────────────────────────┐
+│         API (FastAPI :8100)        │
+├────────────────────────────────────┤
+│         CLI (Typer)                │
+├────────────────────────────────────┤
+│  ┌─────────┐ ┌───────────────┐     │
+│  │Optimizer│ │  Simulator    │     │
+│  └─────────┘ └───────────────┘     │
+│  ┌──────┐ ┌────────┐ ┌──────────┐ │
+│  │Cost  │ │Demand  │ │Policy    │ │
+│  │Engine│ │Forecast│ │Validator │ │
+│  └──────┘ └────────┘ └──────────┘ │
+├────────────────────────────────────┤
+│  Adapters: K8s, Prom, OpenCost,   │
+│           Dynamo, KAI              │
+└────────────────────────────────────┘
+```
 
 ## Quick Start
 
 ```bash
-pip install tesseract-fusion
-tesseract serve --model meta-llama/Llama-2-7b-hf
+# Install
+pip install -e ".[dev]"
+
+# Run API server
+fusion serve
+
+# Run CLI commands
+fusion inventory import fixtures/small-fleet.yaml
+fusion simulate fixtures/fleet.yaml
+fusion optimize fixtures/fleet.yaml
+fusion economics fixtures/fleet.yaml
+
+# Run demo
+python examples/demo_report.py
 ```
+
+## Tests
+
+```bash
+pytest tests/ -v
+```
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/healthz` | Health check |
+| GET | `/readyz` | Readiness check |
+| POST | `/v1/inventory/import` | Import GPU inventory |
+| GET | `/v1/inventory` | List inventory |
+| POST | `/v1/workloads/import` | Import workloads |
+| POST | `/v1/performance-profiles/import` | Import profiles |
+| POST | `/v1/optimization/evaluate` | Run optimization |
+| POST | `/v1/simulations` | Run simulation |
+| POST | `/v1/forecast/evaluate` | Forecast demand |
 
 ## License
 

@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: tesseract/fusion
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8100
+
+env:
+  FUSION_LOG_LEVEL: INFO
+  FUSION_ADVISORY_MODE: "true"
+  FUSION_DATABASE_URL: "sqlite:///data/fusion.db"
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+ingress:
+  enabled: false
+
+rbac:
+  create: true
+  readOnly: true
