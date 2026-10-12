@@ -88,9 +88,13 @@ def create_app(settings: Optional[Settings] = None) -> FastAPI:
 
     @app.post("/v1/workloads/import")
     async def import_workloads(data: List[dict]):
+        from pydantic import ValidationError
         count = 0
         for entry in data:
-            dep = ModelDeployment(**entry)
+            try:
+                dep = ModelDeployment(**entry)
+            except ValidationError as exc:
+                raise HTTPException(status_code=422, detail=exc.errors())
             _deployments[dep.deployment_id] = dep
             count += 1
         return {"imported": count}

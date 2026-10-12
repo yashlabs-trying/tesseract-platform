@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pydantic import SecretStr
 from typing import Optional
 
 
@@ -37,7 +38,7 @@ class Settings(BaseSettings):
     min_decision_interval_minutes: int = 15
 
     # Security
-    api_key: Optional[str] = None
+    api_key: Optional[SecretStr] = None
     enable_auth: bool = False
     advisory_mode: bool = True
 

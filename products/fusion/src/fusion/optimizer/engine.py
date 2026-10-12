@@ -49,6 +49,11 @@ class OptimizationEngine:
         total_rec_cost = Decimal("0")
         total_rec_contribution = Decimal("0")
 
+        # Fleet-wide accounting so two workloads are never recommended onto the
+        # same physical GPU slots (prevents double-booking in advisory output).
+        gpu_slots_used: Dict[str, int] = {}
+        gpu_mem_used: Dict[str, int] = {}
+
         for dep in deployments:
             policy = tenant_policies.get(dep.tenant_id, TenantPolicy(tenant_id=dep.tenant_id))
             profile = profiles.get(dep.deployment_id)
@@ -110,9 +115,31 @@ class OptimizationEngine:
             best_entry: Optional[Tuple[DeploymentAlternative, ExpectedOutcome]] = None
 
             for entry in validated_alts:
-                if entry[0].gpu_pool_id == "__baseline__":
+                alt, _outcome = entry
+                if alt.gpu_pool_id == "__baseline__":
                     baseline_entry = entry
-                elif best_entry is None:
+                    continue
+                # Enforce remaining fleet capacity before accepting a placement.
+                gpu = gpu_map.get(alt.gpu_pool_id)
+                if gpu is not None:
+                    used_slots = gpu_slots_used.get(gpu.gpu_id, 0)
+                    if used_slots + alt.replica_count > gpu.available_resource_slots:
+                        rejected.append(f"{dep.deployment_id}:{alt.gpu_pool_id}")
+                        rejected_reasons[
+                            f"{dep.deployment_id}:{alt.gpu_pool_id}"
+                        ] = "Fleet capacity exhausted by higher-ranked workload"
+                        continue
+                    per_replica_mem = dep.expected_memory_mb or 0
+                    total_mem = per_replica_mem * alt.replica_count
+                    used_mem = gpu_mem_used.get(gpu.gpu_id, 0)
+                    avail_mem = gpu.available_memory_mb or gpu.memory_capacity_mb
+                    if total_mem and used_mem + total_mem > avail_mem:
+                        rejected.append(f"{dep.deployment_id}:{alt.gpu_pool_id}")
+                        rejected_reasons[
+                            f"{dep.deployment_id}:{alt.gpu_pool_id}"
+                        ] = "Fleet GPU memory exhausted by higher-ranked workload"
+                        continue
+                if best_entry is None:
                     best_entry = entry
 
             # If no explicit baseline found, use the first entry as baseline
@@ -125,6 +152,19 @@ class OptimizationEngine:
 
             baseline_alt, baseline_outcome = baseline_entry
             rec_alt, rec_outcome = best_entry
+
+            # Record the committed placement against fleet capacity.
+            if rec_alt.gpu_pool_id != "__baseline__":
+                gpu = gpu_map.get(rec_alt.gpu_pool_id)
+                if gpu is not None:
+                    gpu_slots_used[gpu.gpu_id] = (
+                        gpu_slots_used.get(gpu.gpu_id, 0) + rec_alt.replica_count
+                    )
+                    per_replica_mem = dep.expected_memory_mb or 0
+                    gpu_mem_used[gpu.gpu_id] = (
+                        gpu_mem_used.get(gpu.gpu_id, 0)
+                        + per_replica_mem * rec_alt.replica_count
+                    )
 
             baseline_plan.append(baseline_alt)
             total_baseline_revenue += baseline_outcome.expected_revenue

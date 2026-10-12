@@ -23,6 +23,7 @@ class ConstraintValidator:
         checks.append(self._check_exclusive_allocation(gpu, tenant_policy))
         checks.append(self._check_gpu_compatibility(gpu, deployment))
         checks.append(self._check_tenant_quota(tenant_policy, deployment))
+        checks.append(self._check_resource_quotas(tenant_policy, alternative))
         checks.append(self._check_health(gpu))
         checks.append(self._check_engine_compatibility(deployment, performance_profile))
         checks.append(self._check_sharing_mode(gpu, tenant_policy))
@@ -82,6 +83,16 @@ class ConstraintValidator:
                     details=f"Tenant max workers {policy.max_concurrent_workers}, deployment has {deployment.worker_count}"
                 )
         return ConstraintCheck(name="tenant_quota", result=ConstraintResult.PASS)
+
+    def _check_resource_quotas(self, policy: TenantPolicy, alt: DeploymentAlternative) -> ConstraintCheck:
+        """Enforce the tenant's declared resource_quotas (e.g. {"gpu": N})."""
+        gpu_quota = policy.resource_quotas.get("gpu") if policy.resource_quotas else None
+        if gpu_quota is not None and alt.replica_count > gpu_quota:
+            return ConstraintCheck(
+                name="resource_quota", result=ConstraintResult.FAIL,
+                details=f"Tenant GPU quota {gpu_quota}, requested {alt.replica_count}",
+            )
+        return ConstraintCheck(name="resource_quota", result=ConstraintResult.PASS)
 
     def _check_health(self, gpu: GPUInventory) -> ConstraintCheck:
         if gpu.health_status == HealthStatus.HEALTHY:

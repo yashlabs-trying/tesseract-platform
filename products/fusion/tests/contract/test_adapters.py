@@ -15,9 +15,16 @@ class TestKubernetesAdapterContract:
         from fusion.adapters.kubernetes import KubernetesInventoryAdapter
         adapter = KubernetesInventoryAdapter()
 
-        # Without a real cluster, this should raise a RuntimeError
-        with pytest.raises(RuntimeError):
-            adapter.get_inventory()
+        # Either there is no reachable cluster (RuntimeError) or there is a
+        # reachable cluster that legitimately reports a list (possibly empty on
+        # a CPU-only kind cluster). Both are acceptable contract outcomes.
+        try:
+            inventory = adapter.get_inventory()
+        except RuntimeError:
+            inventory = []
+        assert isinstance(inventory, list)
+        for gpu in inventory:
+            assert isinstance(gpu, GPUInventory)
 
     def test_adapter_rejects_invalid_config(self):
         from fusion.adapters.kubernetes import KubernetesInventoryAdapter

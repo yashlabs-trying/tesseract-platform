@@ -91,16 +91,16 @@ class GPUInventory(BaseModel):
     node_id: str
     vendor: str = "nvidia"
     gpu_model: str
-    memory_capacity_mb: int
-    available_memory_mb: Optional[int] = None
-    available_resource_slots: int = 1
+    memory_capacity_mb: int = Field(ge=0)
+    available_memory_mb: Optional[int] = Field(default=None, ge=0)
+    available_resource_slots: int = Field(default=1, ge=0)
     interconnect: Optional[str] = None
     topology: Optional[str] = None
     supported_isolation_modes: List[IsolationMode] = [IsolationMode.EXCLUSIVE]
     health_status: HealthStatus = HealthStatus.UNKNOWN
     sharing_policy: SharingPolicy = SharingPolicy.EXCLUSIVE_ONLY
     location_zone: Optional[str] = None
-    resource_cost_per_hour: Decimal = Decimal("0")
+    resource_cost_per_hour: Decimal = Field(default=Decimal("0"), ge=0)
     currency: Currency = Currency.USD
     resource_cost_source: str = "manual"
     observed_at: datetime = Field(default_factory=datetime.utcnow)
@@ -138,11 +138,11 @@ class ModelDeployment(BaseModel):
     model_revision: str = "latest"
     serving_engine: str = "vllm"
     current_gpu_allocation: List[str] = Field(default_factory=list)
-    worker_count: int = 1
-    warm_workers: int = 1
+    worker_count: int = Field(default=1, ge=0)
+    warm_workers: int = Field(default=1, ge=0)
     cold_state: bool = False
     observed_demand: Optional[WorkloadDemand] = None
-    expected_memory_mb: Optional[int] = None
+    expected_memory_mb: Optional[int] = Field(default=None, ge=0)
     current_capacity_rps: Optional[float] = None
     resource_owner: str = "kubernetes"
     performance_profile_ref: Optional[str] = None
