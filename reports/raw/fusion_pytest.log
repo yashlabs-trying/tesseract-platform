@@ -9,7 +9,7 @@
 tests/audit/test_baseline_competition.py: 187 warnings
 tests/audit/test_boundary_cases.py: 66 warnings
 tests/audit/test_concurrency_races.py: 438 warnings
-tests/audit/test_endurance.py: 23572 warnings
+tests/audit/test_endurance.py: 21889 warnings
 tests/audit/test_fault_injection.py: 54 warnings
 tests/audit/test_fleet_simulation.py: 1334 warnings
 tests/audit/test_k8s_integration.py: 5 warnings
@@ -186,4 +186,4 @@ tests/contract/test_api_contract.py::TestForecastAPI::test_forecast
     {"deployment_id": "d1", "requests_per_second": 8.0, "measured_at": datetime.utcnow().isoformat()},
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-183 passed, 6 skipped, 37344 warnings in 46.24s
+183 passed, 6 skipped, 35661 warnings in 48.37s

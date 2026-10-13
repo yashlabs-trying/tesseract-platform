@@ -1,6 +1,6 @@
 {
   "phase": "B",
-  "generated_at": "2026-10-13T10:05:16.301983+00:00",
+  "generated_at": "2026-10-13T12:24:22.926215+00:00",
   "foundry_live": {
     "healthz": {
       "status": 200,
@@ -12,16 +12,284 @@
     "metrics_before": {
       "status": 200,
       "body": {
-        "uptime_seconds": 1086.827156305313,
-        "recommendations": 0,
-        "candidates": 0,
-        "hardware_profiles": 0,
+        "uptime_seconds": 7510.525876522064,
+        "recommendations": 1,
+        "candidates": 1,
+        "hardware_profiles": 1,
         "benchmark_evidence": 0
       }
     },
     "recommend": {
-      "status": 500,
-      "body": "Internal Server Error"
+      "status": 200,
+      "body": {
+        "recommendation_id": "rec-a6e7d317",
+        "recommended_candidate_id": "NO_VERIFIED_DEPLOYMENT",
+        "feasible_candidates": [
+          "candidate-26adcc7f"
+        ],
+        "rejected_candidates": [
+          {
+            "candidate_id": "candidate-26adcc7f",
+            "reason": "UNVERIFIED: evidence validity: Evidence is synthetic - not validated against real hardware; margin: Economics are estimated, not validated"
+          }
+        ],
+        "expected_performance": {
+          "evidence_id": "ev-27eeb48e",
+          "candidate_id": "candidate-26adcc7f",
+          "evidence_type": "synthetic",
+          "collected_at": "2026-10-13T12:24:23.008071",
+          "benchmark_tool": "fixture",
+          "benchmark_version": "1.0",
+          "model_revision": "Qwen/Qwen3-0.6B",
+          "container_image_digest": null,
+          "gpu_architecture": null,
+          "benchmark_config": {},
+          "raw_artifact_ref": null,
+          "ttft_ms": {
+            "p50": 25.0,
+            "p95": 50.0,
+            "p99": 100.0,
+            "mean": 50.0,
+            "min": 15.0,
+            "max": 150.0,
+            "unit": "ms"
+          },
+          "itl_ms": {
+            "p50": 3.5,
+            "p95": 5.0,
+            "p99": 10.0,
+            "mean": 5.0,
+            "min": 2.5,
+            "max": 15.0,
+            "unit": "ms"
+          },
+          "request_latency_ms": {
+            "p50": 100.0,
+            "p95": 200.0,
+            "p99": 400.0,
+            "mean": 200.0,
+            "min": 60.0,
+            "max": 600.0,
+            "unit": "ms"
+          },
+          "throughput": {
+            "completed_requests_per_second": 50.0,
+            "input_tokens_per_second": null,
+            "output_tokens_per_second": null
+          },
+          "error_rate": 0.0,
+          "sample_count": 100,
+          "valid": true,
+          "confidence_limitations": null
+        },
+        "economic_assumptions": {
+          "candidate_id": "candidate-26adcc7f",
+          "scenario_id": "scenario-candidate-26adcc7f",
+          "cost_assumptions": {
+            "cost_basis": "avoidable_cash",
+            "gpu_hourly_cost": 0.8,
+            "attributable_overhead_pct": 5,
+            "energy_cost_per_kwh": 0.1,
+            "estimated_power_draw_watts": 350.0
+          },
+          "demand_assumptions": {
+            "monthly_request_volume": 12960000,
+            "avg_input_tokens_per_request": 512.0,
+            "avg_output_tokens_per_request": 256.0,
+            "peak_demand_multiplier": 2.0
+          },
+          "allocated_gpu_cost_monthly": 374.4,
+          "attributable_variable_cost_monthly": 35.1,
+          "total_cost_monthly": 409.5,
+          "estimated_revenue_monthly": 2985.98,
+          "contribution_margin": 2576.48,
+          "margin_pct": 86.29,
+          "break_even_requests_per_month": 1777343.75,
+          "predicted_utilization_pct": 0.2,
+          "cost_per_million_input_tokens": 0.0617,
+          "cost_per_million_output_tokens": 0.1234,
+          "cost_per_request": 3.2e-05,
+          "revenue_per_request": 0.00023,
+          "sensitivity": {
+            "demand_range": [
+              0.5,
+              0.75,
+              1.0,
+              1.25,
+              1.5
+            ],
+            "gpu_cost_range": [
+              0.8,
+              0.9,
+              1.0,
+              1.1,
+              1.2
+            ]
+          },
+          "sensitivity_results": {
+            "demand": [
+              1083.492,
+              1829.988,
+              2576.484,
+              3322.98,
+              4069.476
+            ],
+            "gpu_cost": [
+              2651.364,
+              2613.924,
+              2576.484,
+              2539.044,
+              2501.604
+            ]
+          },
+          "uncertainty_notes": null,
+          "status": "estimated",
+          "config_version": "2.0"
+        },
+        "proposed_pricing": null,
+        "deployment_artifact_ref": null,
+        "approval_status": "unverified_only",
+        "created_at": "2026-10-13T12:24:23.008564"
+      }
+    },
+    "report": {
+      "status": 200,
+      "body": {
+        "recommendation_id": "rec-a6e7d317",
+        "recommended_candidate_id": "NO_VERIFIED_DEPLOYMENT",
+        "feasible_candidates": [
+          "candidate-26adcc7f"
+        ],
+        "rejected_candidates": [
+          {
+            "candidate_id": "candidate-26adcc7f",
+            "reason": "UNVERIFIED: evidence validity: Evidence is synthetic - not validated against real hardware; margin: Economics are estimated, not validated"
+          }
+        ],
+        "expected_performance": {
+          "evidence_id": "ev-27eeb48e",
+          "candidate_id": "candidate-26adcc7f",
+          "evidence_type": "synthetic",
+          "collected_at": "2026-10-13T12:24:23.008071",
+          "benchmark_tool": "fixture",
+          "benchmark_version": "1.0",
+          "model_revision": "Qwen/Qwen3-0.6B",
+          "container_image_digest": null,
+          "gpu_architecture": null,
+          "benchmark_config": {},
+          "raw_artifact_ref": null,
+          "ttft_ms": {
+            "p50": 25.0,
+            "p95": 50.0,
+            "p99": 100.0,
+            "mean": 50.0,
+            "min": 15.0,
+            "max": 150.0,
+            "unit": "ms"
+          },
+          "itl_ms": {
+            "p50": 3.5,
+            "p95": 5.0,
+            "p99": 10.0,
+            "mean": 5.0,
+            "min": 2.5,
+            "max": 15.0,
+            "unit": "ms"
+          },
+          "request_latency_ms": {
+            "p50": 100.0,
+            "p95": 200.0,
+            "p99": 400.0,
+            "mean": 200.0,
+            "min": 60.0,
+            "max": 600.0,
+            "unit": "ms"
+          },
+          "throughput": {
+            "completed_requests_per_second": 50.0,
+            "input_tokens_per_second": null,
+            "output_tokens_per_second": null
+          },
+          "error_rate": 0.0,
+          "sample_count": 100,
+          "valid": true,
+          "confidence_limitations": null
+        },
+        "economic_assumptions": {
+          "candidate_id": "candidate-26adcc7f",
+          "scenario_id": "scenario-candidate-26adcc7f",
+          "cost_assumptions": {
+            "cost_basis": "avoidable_cash",
+            "gpu_hourly_cost": 0.8,
+            "attributable_overhead_pct": 5,
+            "energy_cost_per_kwh": 0.1,
+            "estimated_power_draw_watts": 350.0
+          },
+          "demand_assumptions": {
+            "monthly_request_volume": 12960000,
+            "avg_input_tokens_per_request": 512.0,
+            "avg_output_tokens_per_request": 256.0,
+            "peak_demand_multiplier": 2.0
+          },
+          "allocated_gpu_cost_monthly": 374.4,
+          "attributable_variable_cost_monthly": 35.1,
+          "total_cost_monthly": 409.5,
+          "estimated_revenue_monthly": 2985.98,
+          "contribution_margin": 2576.48,
+          "margin_pct": 86.29,
+          "break_even_requests_per_month": 1777343.75,
+          "predicted_utilization_pct": 0.2,
+          "cost_per_million_input_tokens": 0.0617,
+          "cost_per_million_output_tokens": 0.1234,
+          "cost_per_request": 3.2e-05,
+          "revenue_per_request": 0.00023,
+          "sensitivity": {
+            "demand_range": [
+              0.5,
+              0.75,
+              1.0,
+              1.25,
+              1.5
+            ],
+            "gpu_cost_range": [
+              0.8,
+              0.9,
+              1.0,
+              1.1,
+              1.2
+            ]
+          },
+          "sensitivity_results": {
+            "demand": [
+              1083.492,
+              1829.988,
+              2576.484,
+              3322.98,
+              4069.476
+            ],
+            "gpu_cost": [
+              2651.364,
+              2613.924,
+              2576.484,
+              2539.044,
+              2501.604
+            ]
+          },
+          "uncertainty_notes": null,
+          "status": "estimated",
+          "config_version": "2.0"
+        },
+        "proposed_pricing": null,
+        "deployment_artifact_ref": null,
+        "approval_status": "unverified_only",
+        "created_at": "2026-10-13T12:24:23.008564"
+      }
+    },
+    "manifest": {
+      "status": 404,
+      "body": {
+        "detail": "Candidate not found"
+      }
     },
     "schemas_validate": {
       "status": 200,
@@ -38,16 +306,23 @@
       }
     },
     "profiling_jobs": {
-      "status": 500,
-      "body": "Internal Server Error"
+      "status": 200,
+      "body": {
+        "job_id": "job-0cc101b3f796",
+        "status": "completed",
+        "candidate_count": 1,
+        "candidates": [
+          "candidate-a8a575c5"
+        ]
+      }
     }
   },
   "foundry_library": {
-    "candidate_id": "candidate-29177671",
+    "candidate_id": "candidate-bdfa6c7a",
     "evidence_type": "synthetic",
     "profile_document": {
       "schema_version": "tesseract.performance-profile.v1",
-      "profile_id": "profile-025d6a05",
+      "profile_id": "profile-6691aa47",
       "model_id": "Qwen/Qwen3-0.6B",
       "model_revision": "main",
       "hardware_id": "l4-1",
@@ -56,7 +331,7 @@
       "hardware_vram_gb": 24.0,
       "engine": "BackendType.vllm",
       "engine_version": "0.6.0",
-      "candidate_id": "candidate-29177671",
+      "candidate_id": "candidate-bdfa6c7a",
       "evidence_type": "synthetic",
       "benchmark_tool": "fixture",
       "benchmark_version": "1.0",
@@ -66,7 +341,7 @@
       "workload_output_token_mean": 256.0,
       "error_rate": 0.0,
       "sample_count": 100,
-      "collection_timestamp": "2026-10-13T10:05:16.407035+00:00",
+      "collection_timestamp": "2026-10-13T12:24:23.129250+00:00",
       "source_type": "test_fixture",
       "source_artifact_id": "",
       "ttft_p50_ms": 25.0,
@@ -83,7 +358,7 @@
       "status": 200,
       "body": {
         "status": "ok",
-        "timestamp": "2026-10-13T10:05:16.412121"
+        "timestamp": "2026-10-13T12:24:23.139790"
       }
     },
     "inventory_import": {
@@ -163,6 +438,29 @@
           "resource_cost_source": "fixture",
           "observed_at": "2026-10-13T10:05:16.417540",
           "refresh_timestamp": "2026-10-13T10:05:16.417543"
+        },
+        {
+          "gpu_id": "node-a-gpu-0",
+          "cluster_id": "local",
+          "node_id": "node-a",
+          "vendor": "nvidia",
+          "gpu_model": "A100",
+          "memory_capacity_mb": 81920,
+          "available_memory_mb": 81920,
+          "available_resource_slots": 4,
+          "interconnect": null,
+          "topology": null,
+          "supported_isolation_modes": [
+            "exclusive"
+          ],
+          "health_status": "healthy",
+          "sharing_policy": "exclusive_only",
+          "location_zone": null,
+          "resource_cost_per_hour": "3.0",
+          "currency": "USD",
+          "resource_cost_source": "fixture",
+          "observed_at": "2026-10-13T12:24:23.158492",
+          "refresh_timestamp": "2026-10-13T12:24:23.158495"
         }
       ]
     },
@@ -197,7 +495,7 @@
     "optimize": {
       "status": 200,
       "body": {
-        "recommendation_id": "a7271fb4-9760-41df-b61c-a93af942b301",
+        "recommendation_id": "096064df-9405-408c-b743-7bbc04777610",
         "scenario_id": "phase-b",
         "snapshot_version": "0.1.0",
         "policy_version": "0.1.0",
@@ -266,6 +564,40 @@
               "expected_memory_mb": 40960,
               "expected_performance": null,
               "estimated_cost_per_hour": "3.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 1,
+              "expected_memory_mb": 40960,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "3.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 2,
+              "expected_memory_mb": 81920,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "6.0",
               "estimated_revenue_per_hour": null,
               "estimated_contribution": null,
               "constraint_results": {},
@@ -354,10 +686,10 @@
         },
         "rejected_alternatives": [],
         "rejected_reasons": {},
-        "risk_explanation": "node-a-gpu-0: UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check",
+        "risk_explanation": "node-a-gpu-0: UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check",
         "approval_status": "advisory_only",
         "execution_eligibility": false,
-        "evaluated_at": "2026-10-13T10:05:16.441592",
+        "evaluated_at": "2026-10-13T12:24:23.188474",
         "provenance": {
           "optimizer_version": "0.2.0",
           "engine": "deterministic_candidate_fixed"
@@ -367,7 +699,7 @@
     "recommendation_get": {
       "status": 200,
       "body": {
-        "recommendation_id": "a7271fb4-9760-41df-b61c-a93af942b301",
+        "recommendation_id": "096064df-9405-408c-b743-7bbc04777610",
         "scenario_id": "phase-b",
         "snapshot_version": "0.1.0",
         "policy_version": "0.1.0",
@@ -436,6 +768,40 @@
               "expected_memory_mb": 40960,
               "expected_performance": null,
               "estimated_cost_per_hour": "3.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 1,
+              "expected_memory_mb": 40960,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "3.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 2,
+              "expected_memory_mb": 81920,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "6.0",
               "estimated_revenue_per_hour": null,
               "estimated_contribution": null,
               "constraint_results": {},
@@ -524,10 +890,10 @@
         },
         "rejected_alternatives": [],
         "rejected_reasons": {},
-        "risk_explanation": "node-a-gpu-0: UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check",
+        "risk_explanation": "node-a-gpu-0: UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check",
         "approval_status": "advisory_only",
         "execution_eligibility": false,
-        "evaluated_at": "2026-10-13T10:05:16.441592",
+        "evaluated_at": "2026-10-13T12:24:23.188474",
         "provenance": {
           "optimizer_version": "0.2.0",
           "engine": "deterministic_candidate_fixed"
@@ -543,8 +909,8 @@
     "profile_source_type": "test_fixture",
     "reservation": {
       "schema_version": "tesseract.platform.reservation.v1",
-      "reservation_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
-      "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+      "reservation_id": "756302ba-db9c-4dd2-aa0c-519c70641feb",
+      "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
       "idempotency_key": "phase-b-idem-0001",
       "workload_id": "phase-b-wl",
       "state": "ACTIVE",
@@ -564,16 +930,16 @@
         "gpu_hours": 0.0,
         "cost_per_hour": 3.0
       },
-      "expires_at": "2026-10-13T10:20:16.458099Z",
-      "created_at": "2026-10-13T10:05:16.458111Z",
-      "updated_at": "2026-10-13T10:05:16.458662Z",
+      "expires_at": "2026-10-13T12:39:23.215083Z",
+      "created_at": "2026-10-13T12:24:23.215096Z",
+      "updated_at": "2026-10-13T12:24:23.215679Z",
       "failure_reason": null
     },
     "deployment": {
       "schema_version": "tesseract.platform.deployment.v1",
       "deployment_id": "wl-phase-b-wl",
-      "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
-      "reservation_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
+      "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
+      "reservation_id": "756302ba-db9c-4dd2-aa0c-519c70641feb",
       "workload_id": "phase-b-wl",
       "namespace": "tesseract",
       "state": "ACTIVE",
@@ -589,8 +955,8 @@
       },
       "precision_profile_ref": null,
       "endpoint": "/v1/workloads/phase-b-wl",
-      "created_at": "2026-10-13T10:05:16.458420Z",
-      "updated_at": "2026-10-13T10:05:16.458685Z",
+      "created_at": "2026-10-13T12:24:23.215434Z",
+      "updated_at": "2026-10-13T12:24:23.215704Z",
       "failure_reason": null
     },
     "released_state": "RELEASED",
@@ -694,146 +1060,146 @@
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "operation",
-        "entity_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "entity_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": "PENDING",
         "to_state": "PROFILING",
         "reason": "profiling",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.452368Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.207089Z"
       },
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "reservation",
-        "entity_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "entity_id": "756302ba-db9c-4dd2-aa0c-519c70641feb",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": null,
         "to_state": "RESERVING",
         "reason": "",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.458213Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.215222Z"
       },
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "reservation",
-        "entity_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "entity_id": "756302ba-db9c-4dd2-aa0c-519c70641feb",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": "RESERVING",
         "to_state": "RESERVED",
         "reason": "",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.458275Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.215291Z"
       },
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "operation",
-        "entity_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "entity_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": "PROFILING",
         "to_state": "RESERVED",
         "reason": "capacity reserved",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.458347Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.215377Z"
       },
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "deployment",
         "entity_id": "wl-phase-b-wl",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": null,
         "to_state": "DEPLOYING",
         "reason": "",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.458470Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.215483Z"
       },
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "reservation",
-        "entity_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "entity_id": "756302ba-db9c-4dd2-aa0c-519c70641feb",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": "RESERVED",
         "to_state": "DEPLOYING",
         "reason": "",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.458506Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.215515Z"
       },
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "operation",
-        "entity_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "entity_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": "RESERVED",
         "to_state": "DEPLOYING",
         "reason": "deploying",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.458550Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.215557Z"
       },
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "deployment",
         "entity_id": "wl-phase-b-wl",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": "DEPLOYING",
         "to_state": "READY",
         "reason": "",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.458580Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.215589Z"
       },
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "reservation",
-        "entity_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "entity_id": "756302ba-db9c-4dd2-aa0c-519c70641feb",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": "DEPLOYING",
         "to_state": "READY",
         "reason": "",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.458653Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.215669Z"
       },
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "reservation",
-        "entity_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "entity_id": "756302ba-db9c-4dd2-aa0c-519c70641feb",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": "READY",
         "to_state": "ACTIVE",
         "reason": "",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.458677Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.215695Z"
       },
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "deployment",
         "entity_id": "wl-phase-b-wl",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": "READY",
         "to_state": "ACTIVE",
         "reason": "",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.458701Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.215731Z"
       },
       {
         "schema_version": "tesseract.platform.lifecycle.v1",
         "entity_type": "operation",
-        "entity_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
-        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "entity_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
+        "operation_id": "03816e4b-1397-47c1-a59b-cf5fecec3b53",
         "from_state": "DEPLOYING",
         "to_state": "ACTIVE",
         "reason": "deployment ready",
         "actor": "coordinator",
-        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
-        "timestamp": "2026-10-13T10:05:16.458740Z"
+        "correlation_id": "d9d23471-2fab-4de7-90ce-dfb1a3b4ae5d",
+        "timestamp": "2026-10-13T12:24:23.215789Z"
       }
     ]
   }
