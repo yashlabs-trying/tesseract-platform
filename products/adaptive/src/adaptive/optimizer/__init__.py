@@ -16,6 +16,7 @@ from adaptive.models.optimization import (
 )
 from adaptive.optimizer.cost import AnalyticCostModel, HardwareProfile
 from adaptive.optimizer.engine import optimize
+from adaptive.optimizer.measured import MeasuredCostModel, measured_costs_from_measurements
 from adaptive.optimizer.pareto import dominates, is_antichain, pareto_frontier
 from adaptive.optimizer.quality_estimator import SensitivityQualityEstimator, bit_penalty
 
@@ -23,12 +24,14 @@ __all__ = [
     "AnalyticCostModel",
     "CandidateEvaluation",
     "HardwareProfile",
+    "MeasuredCostModel",
     "OptimizationConstraints",
     "OptimizationResult",
     "SensitivityQualityEstimator",
     "bit_penalty",
     "dominates",
     "is_antichain",
+    "measured_costs_from_measurements",
     "optimize",
     "pareto_frontier",
 ]

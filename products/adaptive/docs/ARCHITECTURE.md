@@ -42,10 +42,10 @@ supports it.
                          └──────────────────────┘
 ```
 
-Milestones 1-4 implement A (Analyzer), B (Sensitivity), C (Profile Generator +
+Milestones 1-5 implement A (Analyzer), B (Sensitivity), C (Profile Generator +
 reference quantizer), D (Quality Engine), E (Optimizer), F (Adaptive
-Controller), G (Integration APIs) and the storage/accounting foundation. M5
-adds GPU backend adapters and GPU test manifests.
+Controller), G (Integration APIs), production backend adapters and GPU test
+manifests. GPU execution remains unvalidated until measured on NVIDIA hardware.
 
 ## 3. A. Model Analyzer
 
@@ -154,7 +154,8 @@ GPU benchmark results are generated.
 - **M4 Integration** - Foundry/Fusion/Ignite adapters and end-to-end Mac tests.
   *(implemented)*
 - **M5 GPU readiness** - production backend adapters, GPU test manifests and
-  benchmark scripts.
+  benchmark scripts. *(adapters and manifests implemented; GPU execution
+  unvalidated)*
 
 Each milestone has explicit acceptance tests; work does not advance while
 critical tests fail.

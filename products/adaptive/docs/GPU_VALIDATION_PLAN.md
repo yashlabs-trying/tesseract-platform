@@ -41,6 +41,33 @@ what must be measured before any GPU claim is promoted from `estimated` to
 4. Reconcile against Adaptive's `estimated` projections; record deltas.
 5. Only then mark profiles `validated`.
 
+## Commands
+
+```bash
+# 1. Validate the manifests on any host (no GPU needed)
+pytest tests/unit/test_benchmark.py -q
+
+# 2. On a GPU host, run the GPU-marked tests
+scripts/run_gpu_tests.sh
+
+# 3. On a GPU host, follow the benchmark template for a pinned manifest
+scripts/benchmark_gpu.sh gpu/manifests/qwen2.5-0.5b-int4-gptq.yaml
+
+# 4. Build a report from measured performance-profile JSON(s)
+adaptive benchmark measured.json --out reports/qwen2.5-0.5b-int4-gptq
+
+# 5. Feed measured costs into the optimizer/controller
+python - <<'PY'
+from adaptive.integration import import_performance_profile
+from adaptive.optimizer import MeasuredCostModel, measured_costs_from_measurements
+# ... load measurements, build MeasuredCostModel(costs, fallback=AnalyticCostModel())
+PY
+```
+
+Backend availability is detected without importing CUDA libraries; a backend
+that cannot run is never reported as runnable (`DeploymentPlan.executable_here`
+is `false`).
+
 ## Guardrails
 
 - No synthetic or extrapolated numbers may be reported as measured.

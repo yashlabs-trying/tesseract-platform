@@ -1,0 +1,25 @@
+schema_version: tesseract.adaptive.gpu-test-manifest.v1
+name: qwen3-0.6b-fp8
+model_id: Qwen/Qwen3-0.6B
+model_revision: main
+profile:
+  bits: 8
+  method: fp8
+  scheme: symmetric
+  granularity: per_tensor
+hardware:
+  gpu_model: NVIDIA H100
+  gpu_count: 1
+  vram_gb: 80.0
+workload:
+  concurrency: 32
+  input_tokens: 1024
+  output_tokens: 256
+thresholds:
+  ttft_p95_ms: 100.0
+  itl_p95_ms: 20.0
+  min_throughput_tps: 2000.0
+  max_perplexity_degradation: 0.005
+calibration_dataset: calibration-wikitext-128
+evaluation_dataset: evaluation-wikitext-512
+seed: 0

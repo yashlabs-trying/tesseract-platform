@@ -314,5 +314,39 @@ def controller(
         typer.echo(f"  t={decision.action.value:<10} {decision.reason}")
 
 
+@app.command()
+def benchmark(
+    measurements: Path = typer.Argument(..., exists=True, readable=True),
+    out: Path = typer.Option(Path("benchmark-report"), "--out", help="output path (no suffix)"),
+    allow_unmeasured: bool = typer.Option(
+        False, "--allow-unmeasured", help="permit synthetic/estimated inputs (not recommended)"
+    ),
+) -> None:
+    """Build a benchmark report from imported performance-profile measurements."""
+    configure_logging()
+    try:
+        from adaptive.benchmark import (
+            build_benchmark_report,
+            write_benchmark_markdown,
+            write_benchmark_report,
+        )
+        from adaptive.integration import import_performance_profile
+
+        data = json.loads(measurements.read_text())
+        documents = data if isinstance(data, list) else [data]
+        imported = [import_performance_profile(doc) for doc in documents]
+        report = build_benchmark_report(imported, require_measured=not allow_unmeasured)
+        write_benchmark_report(report, out.with_suffix(".json"))
+        write_benchmark_markdown(report, out.with_suffix(".md"))
+    except AdaptiveError as exc:
+        typer.secho(f"error: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(f"model:       {report.model_id}")
+    typer.echo(f"evidence:    {report.evidence.value}")
+    typer.echo(f"profiles:    {len(report.summaries)}")
+    typer.echo(f"wrote:       {out.with_suffix('.json')}, {out.with_suffix('.md')}")
+
+
 if __name__ == "__main__":  # pragma: no cover
     app()

@@ -38,3 +38,7 @@ class QualityGateError(AdaptiveError):
 
 class ConstraintViolationError(AdaptiveError):
     """Raised when an optimization candidate violates a hard constraint."""
+
+
+class BackendUnavailableError(AdaptiveError):
+    """Raised when a production backend cannot execute in this environment."""

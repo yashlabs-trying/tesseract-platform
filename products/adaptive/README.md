@@ -10,9 +10,10 @@ analyzes a model, measures where precision matters, generates candidate
 profiles, validates them against quality, and adapts as serving pressure
 changes.
 
-> Status: **Milestones 1-4** are implemented and tested. GPU readiness (M5) is
-> planned. Nothing in this repository claims GPU performance that has not been
-> measured.
+> Status: **Milestones 1-5** are implemented. GPU backend adapters and
+> manifests are complete; actual GPU execution remains unvalidated until run on
+> NVIDIA hardware. Nothing in this repository claims GPU performance that has
+> not been measured.
 
 ## What works today (M1 + M2)
 
@@ -63,6 +64,20 @@ changes.
 - **Ignite** - load prevalidated profiles, plan safe replica transitions, and
   expose readiness/rollback signals.
 
+**GPU readiness (M5)**
+
+- **Backend adapters** - GPTQ, AWQ, bitsandbytes (int8/nf4) and FP8 adapters
+  that generate deployment plans without a GPU and gate execution behind
+  availability checks. Nothing is claimed to run when it cannot.
+- **Benchmark reporting** - report generation that accepts only measured or
+  validated data (typically imported from Foundry) and rejects fabricated
+  inputs; JSON + Markdown output.
+- **GPU test manifests** - pinned model/profile/hardware/workload/threshold
+  manifests under `gpu/manifests/`, plus `scripts/run_gpu_tests.sh` and
+  `scripts/benchmark_gpu.sh`.
+- **Measured cost model** - wires imported Foundry measurements into the
+  optimizer/controller, with a clearly-labelled analytic fallback.
+
 ## Quick start
 
 Requires Python 3.11 or 3.12.
@@ -104,8 +119,11 @@ src/adaptive/
   telemetry/     M3 - telemetry snapshots, sources, scenarios
   controller/    M3 - adaptive controller, simulation, rollback
   integration/   M4 - Foundry / Fusion / Ignite adapters
+  backends/      M5 - GPTQ/AWQ/bitsandbytes/FP8 adapters + deployment plans
+  benchmark/     M5 - benchmark reports + GPU test manifests
   config/        settings (constraints, controller policy)
 schemas/tesseract/  versioned JSON schemas
+gpu/manifests/      pinned GPU validation manifests
 docs/ARCHITECTURE.md
 ```
 

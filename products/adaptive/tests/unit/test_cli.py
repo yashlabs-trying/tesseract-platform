@@ -74,3 +74,18 @@ def test_controller_command() -> None:
     assert result.exit_code == 0
     assert "switches:" in result.stdout
     assert "oscillated:" in result.stdout
+
+
+def test_benchmark_command(tmp_path: Path) -> None:
+    fixture = (
+        Path(__file__).resolve().parents[2]
+        / "fixtures"
+        / "foundry"
+        / "performance-profile-example.json"
+    )
+    out = tmp_path / "report"
+    result = runner.invoke(app, ["benchmark", str(fixture), "--out", str(out)])
+    assert result.exit_code == 0
+    assert "evidence:    measured" in result.stdout
+    assert out.with_suffix(".json").exists()
+    assert out.with_suffix(".md").exists()
