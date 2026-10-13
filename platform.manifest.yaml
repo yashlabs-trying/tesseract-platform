@@ -14,6 +14,10 @@ products:
     default_branch: main
     pinned_commit: b8a70306d2c5d40b73156593987b3c8fab10cd29
     upstream_main_commit: b8a70306d2c5d40b73156593987b3c8fab10cd29
+    validated_commit: ca2bd6a7a11f30b266b52a23d3e59bd76681afb5
+    fix_branch: fix/pre-gpu-api-blockers
+    fix_pr: https://github.com/yashlabs-trying/tesseract-foundry/pull/1
+    api_blockers_fixed: [F-01, F-02, F-03]
     python_package: foundry
     python_version: "1.0.0"
     emits_contract: tesseract.performance-profile.v1
@@ -38,14 +42,17 @@ products:
     # Local validated revision, 3 commits ahead of origin/main.
     pinned_commit: df227307a916a1ec3d3fadab9a28cb2cdb14e911
     upstream_main_commit: cae22248f0fd3a9f9078af13aa4208950743e602
+    validated_commit: a8006f77972cb90fa93cc50424db2de0c900bf27
+    fix_branch: fix/code-issues
+    fix_pr: https://github.com/yashlabs-trying/kubbernetd-saver/pull/1
     python_package: kubbernetd
     python_version: "0.1.0"
     crd: replicagroups.kubbernetd.io
     push_status: >-
       origin/main is a protected branch requiring the "k8s-e2e" status check.
-      The 3 validated commits (ddb01e8, f6d131c, df22730) are already on
-      origin/fix/code-issues and proposed via PR #1; direct push to main was
-      rejected by branch protection. No work is lost.
+      The validated commits are on origin/fix/code-issues (PR #1). The k8s-e2e
+      job failed on a CI install bug (kind written to /usr/local/bin without
+      sudo); fixed in a8006f7.
     historical_test_claim: "91/91 unit, 15/15 k8s lifecycle, 100/100 cold requests (not yet reproduced)"
 
 future_products:
@@ -54,7 +61,9 @@ future_products:
     repository: https://github.com/yashlabs-trying/tesseract-adaptive
     visibility: private
     default_branch: main
-    pinned_commit: 06e2bf37861323f6a52fe20671992c45599590ff
+    pinned_commit: 2d826c863a209fc1af185db8222c033ea227a7f4
+    upstream_main_commit: 53649fdd39157b4c7c7ecd88010e7ee41290c902
+    validation_branch: validation/mac-m5-audit
     python_package: adaptive
     python_version: "0.1.0"
     status: under-development
