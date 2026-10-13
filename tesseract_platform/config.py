@@ -30,9 +30,11 @@ class Settings(BaseSettings):
 
     # Control plane
     state_dsn: str = "sqlite:///./var/platform.db"
-    api_host: str = "0.0.0.0"
+    api_host: str = "127.0.0.1"
     api_port: int = 8088
     log_level: str = "INFO"
+    api_key_enabled: bool = False
+    api_key: Optional[str] = None
 
     # Foundry
     foundry_url: Optional[str] = None
@@ -63,6 +65,8 @@ class Settings(BaseSettings):
     reservation_ttl_seconds: int = 900
     readiness_timeout_seconds: int = 300
     allow_conservative_defaults: bool = True
+    # 0 disables the capacity ledger (capacity governed solely by Fusion).
+    total_usable_capacity: int = 0
 
 
 @lru_cache(maxsize=1)

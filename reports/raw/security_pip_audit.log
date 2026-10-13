@@ -1,0 +1,7 @@
+No known vulnerabilities found
+Name               Skip Reason
+------------------ ---------------------------------------------------------------------------------
+tesseract-adaptive Dependency not found on PyPI and could not be audited: tesseract-adaptive (0.1.0)
+tesseract-foundry  Dependency not found on PyPI and could not be audited: tesseract-foundry (1.0.0)
+tesseract-fusion   Dependency not found on PyPI and could not be audited: tesseract-fusion (0.1.0)
+tesseract-platform Dependency not found on PyPI and could not be audited: tesseract-platform (0.1.0)

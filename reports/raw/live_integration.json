@@ -1,0 +1,840 @@
+{
+  "phase": "B",
+  "generated_at": "2026-10-13T10:05:16.301983+00:00",
+  "foundry_live": {
+    "healthz": {
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "version": "1.0.0"
+      }
+    },
+    "metrics_before": {
+      "status": 200,
+      "body": {
+        "uptime_seconds": 1086.827156305313,
+        "recommendations": 0,
+        "candidates": 0,
+        "hardware_profiles": 0,
+        "benchmark_evidence": 0
+      }
+    },
+    "recommend": {
+      "status": 500,
+      "body": "Internal Server Error"
+    },
+    "schemas_validate": {
+      "status": 200,
+      "body": {
+        "valid": true,
+        "errors": []
+      }
+    },
+    "workloads_validate": {
+      "status": 200,
+      "body": {
+        "valid": true,
+        "warnings": []
+      }
+    },
+    "profiling_jobs": {
+      "status": 500,
+      "body": "Internal Server Error"
+    }
+  },
+  "foundry_library": {
+    "candidate_id": "candidate-29177671",
+    "evidence_type": "synthetic",
+    "profile_document": {
+      "schema_version": "tesseract.performance-profile.v1",
+      "profile_id": "profile-025d6a05",
+      "model_id": "Qwen/Qwen3-0.6B",
+      "model_revision": "main",
+      "hardware_id": "l4-1",
+      "hardware_gpu_model": "L4",
+      "hardware_gpu_count": 1,
+      "hardware_vram_gb": 24.0,
+      "engine": "BackendType.vllm",
+      "engine_version": "0.6.0",
+      "candidate_id": "candidate-29177671",
+      "evidence_type": "synthetic",
+      "benchmark_tool": "fixture",
+      "benchmark_version": "1.0",
+      "workload_id": "demo-chat",
+      "workload_concurrency": 8,
+      "workload_input_token_mean": 512.0,
+      "workload_output_token_mean": 256.0,
+      "error_rate": 0.0,
+      "sample_count": 100,
+      "collection_timestamp": "2026-10-13T10:05:16.407035+00:00",
+      "source_type": "test_fixture",
+      "source_artifact_id": "",
+      "ttft_p50_ms": 25.0,
+      "ttft_p95_ms": 50.0,
+      "ttft_p99_ms": 100.0,
+      "itl_p50_ms": 3.5,
+      "itl_p95_ms": 5.0,
+      "request_latency_p95_ms": 200.0,
+      "completed_requests_per_second": 50.0
+    }
+  },
+  "fusion_live": {
+    "healthz": {
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "timestamp": "2026-10-13T10:05:16.412121"
+      }
+    },
+    "inventory_import": {
+      "status": 200,
+      "body": {
+        "imported": 1
+      }
+    },
+    "inventory": {
+      "status": 200,
+      "body": [
+        {
+          "gpu_id": "node-a-gpu-0",
+          "cluster_id": "local",
+          "node_id": "node-a",
+          "vendor": "nvidia",
+          "gpu_model": "A100",
+          "memory_capacity_mb": 81920,
+          "available_memory_mb": 81920,
+          "available_resource_slots": 4,
+          "interconnect": null,
+          "topology": null,
+          "supported_isolation_modes": [
+            "exclusive"
+          ],
+          "health_status": "healthy",
+          "sharing_policy": "exclusive_only",
+          "location_zone": null,
+          "resource_cost_per_hour": "3.0",
+          "currency": "USD",
+          "resource_cost_source": "fixture",
+          "observed_at": "2026-10-13T09:50:47.324949",
+          "refresh_timestamp": "2026-10-13T09:50:47.324952"
+        },
+        {
+          "gpu_id": "node-a-gpu-0",
+          "cluster_id": "local",
+          "node_id": "node-a",
+          "vendor": "nvidia",
+          "gpu_model": "A100",
+          "memory_capacity_mb": 81920,
+          "available_memory_mb": 81920,
+          "available_resource_slots": 4,
+          "interconnect": null,
+          "topology": null,
+          "supported_isolation_modes": [
+            "exclusive"
+          ],
+          "health_status": "healthy",
+          "sharing_policy": "exclusive_only",
+          "location_zone": null,
+          "resource_cost_per_hour": "3.0",
+          "currency": "USD",
+          "resource_cost_source": "fixture",
+          "observed_at": "2026-10-13T09:52:19.481838",
+          "refresh_timestamp": "2026-10-13T09:52:19.481840"
+        },
+        {
+          "gpu_id": "node-a-gpu-0",
+          "cluster_id": "local",
+          "node_id": "node-a",
+          "vendor": "nvidia",
+          "gpu_model": "A100",
+          "memory_capacity_mb": 81920,
+          "available_memory_mb": 81920,
+          "available_resource_slots": 4,
+          "interconnect": null,
+          "topology": null,
+          "supported_isolation_modes": [
+            "exclusive"
+          ],
+          "health_status": "healthy",
+          "sharing_policy": "exclusive_only",
+          "location_zone": null,
+          "resource_cost_per_hour": "3.0",
+          "currency": "USD",
+          "resource_cost_source": "fixture",
+          "observed_at": "2026-10-13T10:05:16.417540",
+          "refresh_timestamp": "2026-10-13T10:05:16.417543"
+        }
+      ]
+    },
+    "workloads_import": {
+      "status": 200,
+      "body": {
+        "imported": 1
+      }
+    },
+    "workloads": {
+      "status": 200,
+      "body": [
+        {
+          "deployment_id": "dep-qwen",
+          "tenant_id": "tenant-a",
+          "model_id": "Qwen/Qwen3-0.6B",
+          "model_revision": "main",
+          "serving_engine": "vllm",
+          "current_gpu_allocation": [],
+          "worker_count": 1,
+          "warm_workers": 1,
+          "cold_state": false,
+          "observed_demand": null,
+          "expected_memory_mb": 40960,
+          "current_capacity_rps": null,
+          "resource_owner": "kubernetes",
+          "performance_profile_ref": null,
+          "scaling_controller": null
+        }
+      ]
+    },
+    "optimize": {
+      "status": 200,
+      "body": {
+        "recommendation_id": "a7271fb4-9760-41df-b61c-a93af942b301",
+        "scenario_id": "phase-b",
+        "snapshot_version": "0.1.0",
+        "policy_version": "0.1.0",
+        "recommended_plan": [
+          {
+            "deployment_id": "dep-qwen",
+            "gpu_pool_id": "node-a-gpu-0",
+            "gpu_type": "A100",
+            "replica_count": 1,
+            "expected_memory_mb": 40960,
+            "expected_performance": null,
+            "estimated_cost_per_hour": "3.0",
+            "estimated_revenue_per_hour": null,
+            "estimated_contribution": null,
+            "constraint_results": {},
+            "constraint_details": [],
+            "warm_policy": "warm",
+            "cold_start_risk": null,
+            "allocation_status": "recommended",
+            "explanation": null
+          }
+        ],
+        "baseline_plan": [
+          {
+            "deployment_id": "dep-qwen",
+            "gpu_pool_id": "__baseline__",
+            "gpu_type": "current",
+            "replica_count": 1,
+            "expected_memory_mb": 40960,
+            "expected_performance": null,
+            "estimated_cost_per_hour": "0",
+            "estimated_revenue_per_hour": null,
+            "estimated_contribution": null,
+            "constraint_results": {},
+            "constraint_details": [],
+            "warm_policy": "warm",
+            "cold_start_risk": null,
+            "allocation_status": "current",
+            "explanation": null
+          }
+        ],
+        "alternative_plans": [
+          [
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 1,
+              "expected_memory_mb": 40960,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "3.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 1,
+              "expected_memory_mb": 40960,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "3.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 2,
+              "expected_memory_mb": 81920,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "6.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 2,
+              "expected_memory_mb": 81920,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "6.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 2,
+              "expected_memory_mb": 81920,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "6.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            }
+          ]
+        ],
+        "expected_economics": {
+          "expected_revenue": "0",
+          "expected_operating_cost": "3.0",
+          "expected_contribution_margin": "-3.0",
+          "modeled_risk_adjustment": "0",
+          "expected_p95_latency_ms": null,
+          "expected_p99_latency_ms": null,
+          "slo_violation_probability": null,
+          "uncertainty_description": null
+        },
+        "baseline_economics": {
+          "expected_revenue": "0",
+          "expected_operating_cost": "0",
+          "expected_contribution_margin": "0",
+          "modeled_risk_adjustment": "0",
+          "expected_p95_latency_ms": null,
+          "expected_p99_latency_ms": null,
+          "slo_violation_probability": null,
+          "uncertainty_description": null
+        },
+        "confidence": 0.3,
+        "constraint_checks": {
+          "node-a-gpu-0": "unknown"
+        },
+        "rejected_alternatives": [],
+        "rejected_reasons": {},
+        "risk_explanation": "node-a-gpu-0: UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check",
+        "approval_status": "advisory_only",
+        "execution_eligibility": false,
+        "evaluated_at": "2026-10-13T10:05:16.441592",
+        "provenance": {
+          "optimizer_version": "0.2.0",
+          "engine": "deterministic_candidate_fixed"
+        }
+      }
+    },
+    "recommendation_get": {
+      "status": 200,
+      "body": {
+        "recommendation_id": "a7271fb4-9760-41df-b61c-a93af942b301",
+        "scenario_id": "phase-b",
+        "snapshot_version": "0.1.0",
+        "policy_version": "0.1.0",
+        "recommended_plan": [
+          {
+            "deployment_id": "dep-qwen",
+            "gpu_pool_id": "node-a-gpu-0",
+            "gpu_type": "A100",
+            "replica_count": 1,
+            "expected_memory_mb": 40960,
+            "expected_performance": null,
+            "estimated_cost_per_hour": "3.0",
+            "estimated_revenue_per_hour": null,
+            "estimated_contribution": null,
+            "constraint_results": {},
+            "constraint_details": [],
+            "warm_policy": "warm",
+            "cold_start_risk": null,
+            "allocation_status": "recommended",
+            "explanation": null
+          }
+        ],
+        "baseline_plan": [
+          {
+            "deployment_id": "dep-qwen",
+            "gpu_pool_id": "__baseline__",
+            "gpu_type": "current",
+            "replica_count": 1,
+            "expected_memory_mb": 40960,
+            "expected_performance": null,
+            "estimated_cost_per_hour": "0",
+            "estimated_revenue_per_hour": null,
+            "estimated_contribution": null,
+            "constraint_results": {},
+            "constraint_details": [],
+            "warm_policy": "warm",
+            "cold_start_risk": null,
+            "allocation_status": "current",
+            "explanation": null
+          }
+        ],
+        "alternative_plans": [
+          [
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 1,
+              "expected_memory_mb": 40960,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "3.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 1,
+              "expected_memory_mb": 40960,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "3.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 2,
+              "expected_memory_mb": 81920,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "6.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 2,
+              "expected_memory_mb": 81920,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "6.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            },
+            {
+              "deployment_id": "dep-qwen",
+              "gpu_pool_id": "node-a-gpu-0",
+              "gpu_type": "A100",
+              "replica_count": 2,
+              "expected_memory_mb": 81920,
+              "expected_performance": null,
+              "estimated_cost_per_hour": "6.0",
+              "estimated_revenue_per_hour": null,
+              "estimated_contribution": null,
+              "constraint_results": {},
+              "constraint_details": [],
+              "warm_policy": "warm",
+              "cold_start_risk": null,
+              "allocation_status": "candidate",
+              "explanation": null
+            }
+          ]
+        ],
+        "expected_economics": {
+          "expected_revenue": "0",
+          "expected_operating_cost": "3.0",
+          "expected_contribution_margin": "-3.0",
+          "modeled_risk_adjustment": "0",
+          "expected_p95_latency_ms": null,
+          "expected_p99_latency_ms": null,
+          "slo_violation_probability": null,
+          "uncertainty_description": null
+        },
+        "baseline_economics": {
+          "expected_revenue": "0",
+          "expected_operating_cost": "0",
+          "expected_contribution_margin": "0",
+          "modeled_risk_adjustment": "0",
+          "expected_p95_latency_ms": null,
+          "expected_p99_latency_ms": null,
+          "slo_violation_probability": null,
+          "uncertainty_description": null
+        },
+        "confidence": 0.3,
+        "constraint_checks": {
+          "node-a-gpu-0": "unknown"
+        },
+        "rejected_alternatives": [],
+        "rejected_reasons": {},
+        "risk_explanation": "node-a-gpu-0: UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check, UNKNOWN: engine_compatibility \u2014 No performance profile available, UNKNOWN: latency_slo \u2014 Insufficient data for latency check",
+        "approval_status": "advisory_only",
+        "execution_eligibility": false,
+        "evaluated_at": "2026-10-13T10:05:16.441592",
+        "provenance": {
+          "optimizer_version": "0.2.0",
+          "engine": "deterministic_candidate_fixed"
+        }
+      }
+    }
+  },
+  "platform_lifecycle": {
+    "final_state": "ACTIVE",
+    "error": null,
+    "endpoint": "/v1/workloads/phase-b-wl",
+    "profile_evidence": "synthetic",
+    "profile_source_type": "test_fixture",
+    "reservation": {
+      "schema_version": "tesseract.platform.reservation.v1",
+      "reservation_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
+      "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+      "idempotency_key": "phase-b-idem-0001",
+      "workload_id": "phase-b-wl",
+      "state": "ACTIVE",
+      "revision": 4,
+      "placement": [
+        {
+          "gpu_id": "node-a-gpu-0-0",
+          "node_id": "node-a-gpu-0",
+          "gpu_model": "A100",
+          "memory_mb": 40960,
+          "isolation": "warm",
+          "evidence": "estimated"
+        }
+      ],
+      "capacity": {
+        "gpu_count": 1,
+        "gpu_hours": 0.0,
+        "cost_per_hour": 3.0
+      },
+      "expires_at": "2026-10-13T10:20:16.458099Z",
+      "created_at": "2026-10-13T10:05:16.458111Z",
+      "updated_at": "2026-10-13T10:05:16.458662Z",
+      "failure_reason": null
+    },
+    "deployment": {
+      "schema_version": "tesseract.platform.deployment.v1",
+      "deployment_id": "wl-phase-b-wl",
+      "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+      "reservation_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
+      "workload_id": "phase-b-wl",
+      "namespace": "tesseract",
+      "state": "ACTIVE",
+      "replicas": 1,
+      "model": {
+        "name": "Qwen/Qwen3-0.6B",
+        "engine": "vLLM",
+        "precision": "bf16",
+        "tensorParallel": 1,
+        "pipelineParallel": 1,
+        "gpuPerWorker": 1,
+        "workers": 1
+      },
+      "precision_profile_ref": null,
+      "endpoint": "/v1/workloads/phase-b-wl",
+      "created_at": "2026-10-13T10:05:16.458420Z",
+      "updated_at": "2026-10-13T10:05:16.458685Z",
+      "failure_reason": null
+    },
+    "released_state": "RELEASED",
+    "ignite_deployed": [
+      "wl-phase-b-wl"
+    ],
+    "ignite_released": [
+      "wl-phase-b-wl"
+    ],
+    "ignite_manifests": {
+      "wl-phase-b-wl": {
+        "replicagroup": {
+          "apiVersion": "kubbernetd.io/v1",
+          "kind": "ReplicaGroup",
+          "metadata": {
+            "name": "wl-phase-b-wl",
+            "namespace": "tesseract",
+            "labels": {
+              "app.kubernetes.io/managed-by": "tesseract-platform",
+              "tesseract.io/workload": "phase-b-wl"
+            }
+          },
+          "spec": {
+            "model": {
+              "name": "Qwen/Qwen3-0.6B",
+              "engine": "vLLM",
+              "precision": "bf16",
+              "tensorParallel": 1,
+              "pipelineParallel": 1,
+              "gpuPerWorker": 1,
+              "workers": 1
+            },
+            "targetRef": {
+              "kind": "Deployment",
+              "name": "wl-phase-b-wl"
+            },
+            "wakeSLO": 30,
+            "coldStartTimeout": 300,
+            "sleepPolicy": {
+              "sleepDepth": "full",
+              "idleTimeout": 300
+            }
+          }
+        },
+        "deployment": {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "metadata": {
+            "name": "wl-phase-b-wl",
+            "namespace": "tesseract",
+            "labels": {
+              "app.kubernetes.io/managed-by": "tesseract-platform"
+            }
+          },
+          "spec": {
+            "replicas": 1,
+            "selector": {
+              "matchLabels": {
+                "app": "wl-phase-b-wl"
+              }
+            },
+            "template": {
+              "metadata": {
+                "labels": {
+                  "app": "wl-phase-b-wl"
+                }
+              },
+              "spec": {
+                "containers": [
+                  {
+                    "name": "model-server",
+                    "image": "vllm/vllm-openai:latest",
+                    "args": [
+                      "--model",
+                      "Qwen/Qwen3-0.6B",
+                      "--port",
+                      "8000"
+                    ],
+                    "ports": [
+                      {
+                        "containerPort": 8000
+                      }
+                    ],
+                    "readinessProbe": {
+                      "httpGet": {
+                        "path": "/health",
+                        "port": 8000
+                      },
+                      "initialDelaySeconds": 10,
+                      "periodSeconds": 5
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "transitions": [
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "operation",
+        "entity_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": "PENDING",
+        "to_state": "PROFILING",
+        "reason": "profiling",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.452368Z"
+      },
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "reservation",
+        "entity_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": null,
+        "to_state": "RESERVING",
+        "reason": "",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.458213Z"
+      },
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "reservation",
+        "entity_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": "RESERVING",
+        "to_state": "RESERVED",
+        "reason": "",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.458275Z"
+      },
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "operation",
+        "entity_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": "PROFILING",
+        "to_state": "RESERVED",
+        "reason": "capacity reserved",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.458347Z"
+      },
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "deployment",
+        "entity_id": "wl-phase-b-wl",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": null,
+        "to_state": "DEPLOYING",
+        "reason": "",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.458470Z"
+      },
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "reservation",
+        "entity_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": "RESERVED",
+        "to_state": "DEPLOYING",
+        "reason": "",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.458506Z"
+      },
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "operation",
+        "entity_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": "RESERVED",
+        "to_state": "DEPLOYING",
+        "reason": "deploying",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.458550Z"
+      },
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "deployment",
+        "entity_id": "wl-phase-b-wl",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": "DEPLOYING",
+        "to_state": "READY",
+        "reason": "",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.458580Z"
+      },
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "reservation",
+        "entity_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": "DEPLOYING",
+        "to_state": "READY",
+        "reason": "",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.458653Z"
+      },
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "reservation",
+        "entity_id": "6f49ecb8-a9d7-4693-ace2-8d987084d8d8",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": "READY",
+        "to_state": "ACTIVE",
+        "reason": "",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.458677Z"
+      },
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "deployment",
+        "entity_id": "wl-phase-b-wl",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": "READY",
+        "to_state": "ACTIVE",
+        "reason": "",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.458701Z"
+      },
+      {
+        "schema_version": "tesseract.platform.lifecycle.v1",
+        "entity_type": "operation",
+        "entity_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "operation_id": "eceb8b0b-5d64-4528-993a-95eeed2d4ec7",
+        "from_state": "DEPLOYING",
+        "to_state": "ACTIVE",
+        "reason": "deployment ready",
+        "actor": "coordinator",
+        "correlation_id": "500d82c1-e9a0-4804-a686-f4a17172b511",
+        "timestamp": "2026-10-13T10:05:16.458740Z"
+      }
+    ]
+  }
+}

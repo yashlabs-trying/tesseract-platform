@@ -10,7 +10,7 @@ simply deploys the model's declared precision.
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import NoReturn, Optional
 
 import httpx
 
@@ -55,7 +55,7 @@ class UnavailableAdaptiveProvider:
     available = False
     enabled = True
 
-    def _fail(self):
+    def _fail(self) -> NoReturn:
         raise IntegrationUnavailable("Adaptive provider is enabled but unavailable")
 
     def list_profiles(self, model_id: str) -> list[PrecisionProfileRef]:

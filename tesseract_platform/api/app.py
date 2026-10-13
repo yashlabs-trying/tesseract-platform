@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException
 from pydantic import ValidationError
 
 from tesseract_platform import __version__
@@ -26,6 +26,13 @@ def create_app(platform: Optional[Platform] = None) -> FastAPI:
     )
     plat = platform or build_platform()
     app.state.platform = plat
+    settings = plat.settings
+
+    def require_api_key(x_api_key: Optional[str] = Header(None, alias="X-API-Key")):
+        if settings.api_key_enabled:
+            if not settings.api_key or x_api_key != settings.api_key:
+                raise HTTPException(status_code=401, detail="invalid or missing API key")
+        return x_api_key
 
     @app.get("/healthz")
     def healthz():
@@ -42,7 +49,7 @@ def create_app(platform: Optional[Platform] = None) -> FastAPI:
         }
 
     @app.post("/v1/workloads")
-    def submit_workload(body: dict):
+    def submit_workload(body: dict, api_key: str = Depends(require_api_key)):
         try:
             request = WorkloadRequest.model_validate(body)
         except ValidationError as exc:
@@ -65,7 +72,7 @@ def create_app(platform: Optional[Platform] = None) -> FastAPI:
         return [t.model_dump(mode="json") for t in plat.store.list_transitions(operation_id)]
 
     @app.post("/v1/workloads/{operation_id}/release")
-    def release_workload(operation_id: str):
+    def release_workload(operation_id: str, api_key: str = Depends(require_api_key)):
         try:
             op = plat.coordinator.release(operation_id)
         except CoordinatorError as exc:
@@ -73,7 +80,9 @@ def create_app(platform: Optional[Platform] = None) -> FastAPI:
         return op.model_dump(mode="json")
 
     @app.post("/v1/workloads/{operation_id}/rollback")
-    def rollback_workload(operation_id: str, reason: str = "api_rollback"):
+    def rollback_workload(
+        operation_id: str, reason: str = "api_rollback", api_key: str = Depends(require_api_key)
+    ):
         try:
             plan = plat.coordinator.rollback(operation_id, reason=reason)
         except CoordinatorError as exc:
@@ -81,7 +90,7 @@ def create_app(platform: Optional[Platform] = None) -> FastAPI:
         return plan.model_dump(mode="json")
 
     @app.post("/v1/telemetry")
-    def ingest_telemetry(body: dict):
+    def ingest_telemetry(body: dict, api_key: str = Depends(require_api_key)):
         try:
             event = plat.telemetry.ingest(body)
         except (ValidationError, ValueError) as exc:
@@ -93,11 +102,11 @@ def create_app(platform: Optional[Platform] = None) -> FastAPI:
         return plat.telemetry.aggregate(workload_id).model_dump(mode="json")
 
     @app.post("/v1/reconcile")
-    def reconcile():
+    def reconcile(api_key: str = Depends(require_api_key)):
         return {"actions": plat.reconciler.reconcile()}
 
     @app.post("/v1/controller/evaluate")
-    def controller_evaluate(body: dict):
+    def controller_evaluate(body: dict, api_key: str = Depends(require_api_key)):
         workload_id = body.get("workload_id")
         if not workload_id:
             raise HTTPException(status_code=422, detail="workload_id is required")

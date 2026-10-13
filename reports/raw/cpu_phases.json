@@ -1,0 +1,201 @@
+{
+  "generated_at": "2026-10-13T10:05:16.732535+00:00",
+  "D": {
+    "phase": "D",
+    "total_capacity": 20,
+    "active": 12,
+    "failed": 88,
+    "ledger": {
+      "total_usable_capacity": 20,
+      "active_reserved": 0,
+      "committed": 20,
+      "available": 0,
+      "active_owners": [],
+      "committed_owners": [
+        "1d6f528a-e268-431a-80cd-00bbb0827f56",
+        "2980cdc9-229c-446d-b813-022766190c23",
+        "3899c12f-7355-4ce8-ae98-c88ec87b724e",
+        "530beece-45b0-427c-86ed-5002bc2b62d2",
+        "6eb2442b-a20d-498e-a924-e9d04f201812",
+        "7eea8396-e718-4f04-8e46-d5276d64e008",
+        "ad04319e-eb4d-459e-8b2a-5e9b4fa89e78",
+        "c5baa82a-8eea-4fec-af3c-b4b5195876af",
+        "d023149d-60fd-425c-95e6-74c24b7364ab",
+        "db7a4926-ceca-4f41-a747-50d85ec9fa0c",
+        "f69db8d8-37f0-42ea-a280-b9fa1d7f1462",
+        "fb2178a8-723b-452a-9a84-9d02fa1e21ee"
+      ],
+      "invariant_ok": true
+    },
+    "invariants": {
+      "no_duplicate_reservations": true,
+      "every_active_has_reservation": true,
+      "every_active_has_deployment": true,
+      "capacity_invariant": true,
+      "used_le_total": true
+    },
+    "fault_injection": {
+      "fusion_unavailable": {
+        "state": "FAILED",
+        "capacity_released": true,
+        "invariant_ok": true
+      },
+      "ignite_unavailable": {
+        "state": "FAILED",
+        "capacity_released": true,
+        "invariant_ok": true
+      },
+      "readiness_timeout": {
+        "state": "FAILED",
+        "capacity_released": true,
+        "invariant_ok": true
+      }
+    },
+    "repeated_release": {
+      "used": 0,
+      "state": "RELEASED"
+    },
+    "stale_reservation": {
+      "actions": [
+        {
+          "type": "expire_reservation",
+          "reservation_id": "res-stale",
+          "outcome": "COMPLETED"
+        }
+      ],
+      "final_state": "RELEASED"
+    }
+  },
+  "F": {
+    "phase": "F",
+    "levels": [
+      {
+        "level": 1,
+        "success": 1,
+        "failed": 0,
+        "p50_ms": 0.9056649996637134,
+        "p95_ms": 0.9056649996637134,
+        "p99_ms": 0.9056649996637134
+      },
+      {
+        "level": 10,
+        "success": 10,
+        "failed": 0,
+        "p50_ms": 17.57731399993645,
+        "p95_ms": 19.941320350244496,
+        "p99_ms": 20.11731607022739
+      },
+      {
+        "level": 25,
+        "success": 25,
+        "failed": 0,
+        "p50_ms": 45.851939000385755,
+        "p95_ms": 50.397568799962755,
+        "p99_ms": 52.43347831976279
+      },
+      {
+        "level": 100,
+        "success": 100,
+        "failed": 0,
+        "p50_ms": 122.51707600034933,
+        "p95_ms": 174.83499765039596,
+        "p99_ms": 186.59322280936982
+      },
+      {
+        "level": 250,
+        "success": 250,
+        "failed": 0,
+        "p50_ms": 134.0752109999812,
+        "p95_ms": 168.5153882999202,
+        "p99_ms": 191.12628488934206
+      },
+      {
+        "level": 500,
+        "success": 500,
+        "failed": 0,
+        "p50_ms": 136.44466549976642,
+        "p95_ms": 177.3653055001432,
+        "p99_ms": 206.45992401005057
+      }
+    ],
+    "soak_100_cycles": {
+      "cycles": 100,
+      "seconds": 0.106,
+      "ledger_used_after": 0,
+      "rss_kb_before": 60536,
+      "rss_kb_after": 60536,
+      "rss_delta_kb": 0
+    },
+    "note": "30-minute sustained soak NOT RUN in this session (see report)"
+  },
+  "G": {
+    "phase": "G",
+    "matrix": {
+      "foundry_unavailable": {
+        "state": "ACTIVE",
+        "invariant_ok": true,
+        "capacity_released": false,
+        "has_error": false,
+        "audit_events": [
+          "foundry_unavailable",
+          "workload_active"
+        ],
+        "transition_count": 12,
+        "terminal": true
+      },
+      "fusion_unavailable": {
+        "state": "FAILED",
+        "invariant_ok": true,
+        "capacity_released": true,
+        "has_error": true,
+        "audit_events": [
+          "operation_failed",
+          "compensation"
+        ],
+        "transition_count": 2,
+        "terminal": true
+      },
+      "ignite_unavailable": {
+        "state": "FAILED",
+        "invariant_ok": true,
+        "capacity_released": true,
+        "has_error": true,
+        "audit_events": [
+          "operation_failed",
+          "compensation"
+        ],
+        "transition_count": 7,
+        "terminal": true
+      },
+      "readiness_timeout": {
+        "state": "FAILED",
+        "invariant_ok": true,
+        "capacity_released": true,
+        "has_error": true,
+        "audit_events": [
+          "operation_failed",
+          "compensation"
+        ],
+        "transition_count": 12,
+        "terminal": true
+      },
+      "adaptive_unavailable": {
+        "state": "ACTIVE",
+        "precision_ref": null
+      }
+    }
+  },
+  "H": {
+    "phase": "H",
+    "integrity": {
+      "request_count": 5,
+      "success_count": 3,
+      "failure_count": 2,
+      "error_rate": 0.4,
+      "throughput_uses_success_only": true,
+      "ttft_p50_success_only": 100.0,
+      "duplicate_event_deduped": true,
+      "out_of_order_handled": true
+    }
+  }
+}

@@ -36,9 +36,15 @@ def test_map_recommendation_builds_placement():
     assert result.placement[0].evidence.value == "measured"
 
 
-def test_map_recommendation_rejects_ineligible():
+def test_map_recommendation_accepts_advisory_plan():
+    # Fusion is advisory by default; the platform is the executor.
+    result = map_recommendation(_recommendation(eligible=False))
+    assert result.capacity.gpu_count == 2
+
+
+def test_map_recommendation_rejects_ineligible_when_required():
     with pytest.raises(IntegrationError):
-        map_recommendation(_recommendation(eligible=False))
+        map_recommendation(_recommendation(eligible=False), require_execution_eligible=True)
 
 
 def test_map_recommendation_rejects_empty_plan():
