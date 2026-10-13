@@ -1,0 +1,23 @@
+image:
+  repository: tesseract-platform
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+controller:
+  mode: observe_only
+  actionBudget: 0
+
+foundryUrl: ""
+fusionUrl: ""
+igniteNamespace: tesseract
+adaptiveEnabled: false
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

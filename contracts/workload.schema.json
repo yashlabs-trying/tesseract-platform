@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.platform.workload.v1",
+  "title": "Tesseract Platform Workload Request",
+  "description": "A customer request submitted to the platform. Identifies the workload and its requirements; the platform resolves identity, idempotency and orchestration.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "tesseract.platform.workload.v1" },
+    "workload_id": { "type": "string", "minLength": 1 },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 8,
+      "description": "Client-supplied stable key. Re-submitting with the same key returns the existing operation instead of creating a new one."
+    },
+    "tenant_id": { "type": "string" },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_id", "revision"],
+      "properties": {
+        "model_id": { "type": "string" },
+        "revision": { "type": "string" },
+        "architecture": { "type": "string" },
+        "parameter_count": { "type": "integer", "minimum": 1 },
+        "precision": { "type": "string", "default": "bf16" },
+        "weight_memory_gb": { "type": "number", "minimum": 0 }
+      }
+    },
+    "workload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "context_length": { "type": "integer", "minimum": 1 },
+        "input_tokens_mean": { "type": "number", "minimum": 1 },
+        "output_tokens_mean": { "type": "number", "minimum": 1 },
+        "arrival_rate_rps": { "type": "number", "minimum": 0 },
+        "concurrency": { "type": "integer", "minimum": 1, "default": 1 }
+      }
+    },
+    "slo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ttft_p95_ms": { "type": "number", "minimum": 0 },
+        "itl_p95_ms": { "type": "number", "minimum": 0 },
+        "request_p99_ms": { "type": "number", "minimum": 0 },
+        "availability": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "placement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preferred_gpu_model": { "type": "string" },
+        "min_gpu_count": { "type": "integer", "minimum": 1, "default": 1 },
+        "replicas": { "type": "integer", "minimum": 0, "default": 1 }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["schema_version", "workload_id", "idempotency_key", "model"]
+}

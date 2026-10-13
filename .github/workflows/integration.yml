@@ -1,0 +1,47 @@
+name: Integration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    name: in-process integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test]"
+      - name: Full lifecycle, failure recovery and concurrency tests
+        run: python -m pytest tests/integration -o addopts='' -q
+
+  kubernetes:
+    name: kubernetes e2e (optional)
+    # Optional and clearly labelled: requires a cluster and is not required for CI.
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Create kind cluster
+        run: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.23.0/kind-linux-amd64
+          chmod +x ./kind
+          ./kind create cluster
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test]" kubernetes
+      - name: Kubernetes tests
+        run: python -m pytest -m kubernetes -o addopts='' -q

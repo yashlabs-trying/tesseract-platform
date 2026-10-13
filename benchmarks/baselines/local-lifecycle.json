@@ -1,0 +1,50 @@
+{
+  "scenario": "local-lifecycle",
+  "generated_at": "2026-10-13T08:31:30.252801+00:00",
+  "platform_version": "0.1.0",
+  "git_commit": "unknown",
+  "environment": {
+    "python": "3.14.4",
+    "implementation": "CPython",
+    "machine": "x86_64",
+    "system": "Linux",
+    "release": "6.18.33.2-microsoft-standard-WSL2"
+  },
+  "pinned_products": {
+    "foundry": "b8a70306d2c5d40b73156593987b3c8fab10cd29",
+    "fusion": "c0f4eb9838c6203e185449989a932475a37ee827",
+    "ignite": "df227307a916a1ec3d3fadab9a28cb2cdb14e911"
+  },
+  "model_or_fixture": "qwen3-0.6b",
+  "runtime": "in-process coordinator + fixture providers",
+  "hardware": "none (simulated GPU capacity)",
+  "precision": "bf16",
+  "workload": {
+    "concurrency": 10,
+    "request_count": 100,
+    "replicas": 1,
+    "min_gpu_count": 1
+  },
+  "request_count": 100,
+  "success_count": 100,
+  "failure_count": 0,
+  "duration_seconds": 0.4175,
+  "throughput_rps": 239.5206,
+  "latency_ms": {
+    "p50": 41.35585400013042,
+    "p95": 54.69179850000501,
+    "p99": 56.30772529992555
+  },
+  "ttft_ms": null,
+  "itl_ms": null,
+  "resource_utilisation": "not collected (in-process)",
+  "known_limitations": [
+    "Fixture providers only; no model server, no GPU.",
+    "Measures orchestration overhead, not inference throughput.",
+    "Not a production throughput claim."
+  ],
+  "regression_check": {
+    "baseline": null,
+    "note": "no baseline recorded"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.platform.deployment.v1",
+  "title": "Tesseract Platform Deployment Instruction",
+  "description": "The instruction the platform sends to Ignite to create or reuse a workload, plus the observed deployment state. The model block mirrors Ignite's ReplicaGroup model spec.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "tesseract.platform.deployment.v1" },
+    "deployment_id": { "type": "string" },
+    "operation_id": { "type": "string" },
+    "reservation_id": { "type": "string" },
+    "workload_id": { "type": "string" },
+    "namespace": { "type": "string" },
+    "state": {
+      "enum": [
+        "PENDING",
+        "DEPLOYING",
+        "READY",
+        "ACTIVE",
+        "RELEASING",
+        "RELEASED",
+        "FAILED"
+      ]
+    },
+    "replicas": { "type": "integer", "minimum": 0 },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "engine": { "enum": ["vLLM", "SGLang", "TGI"], "default": "vLLM" },
+        "precision": { "type": "string", "default": "bf16" },
+        "tensorParallel": { "type": "integer", "minimum": 1, "default": 1 },
+        "pipelineParallel": { "type": "integer", "minimum": 1, "default": 1 },
+        "gpuPerWorker": { "type": "integer", "minimum": 1, "default": 1 },
+        "workers": { "type": "integer", "minimum": 1, "default": 1 }
+      }
+    },
+    "precision_profile_ref": {
+      "type": "string",
+      "description": "Optional Adaptive precision profile reference. Absent when Adaptive is disabled."
+    },
+    "endpoint": {
+      "type": "string",
+      "description": "Routable endpoint, only populated once state is READY or ACTIVE."
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "failure_reason": { "type": "string" }
+  },
+  "required": ["schema_version", "deployment_id", "operation_id", "workload_id", "state", "model"]
+}

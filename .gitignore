@@ -1,0 +1,33 @@
+# Byte-compiled / caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+
+# Platform runtime state
+*.db
+*.sqlite
+*.sqlite3
+var/
+
+# Local source checkouts (pinned product checkouts for integration)
+src-checkouts/
+
+# Generated benchmark reports (keep .gitkeep)
+benchmarks/reports/*.json
+benchmarks/reports/*.md
+
+# Secrets / local env
+.env
+.env.local
+
+# OS
+.DS_Store

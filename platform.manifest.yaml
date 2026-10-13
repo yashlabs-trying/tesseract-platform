@@ -1,0 +1,74 @@
+schema_version: tesseract.platform.source-manifest.v1
+generated_at: "2026-10-13"
+description: >-
+  Pinned source revisions of the Tesseract product repositories that this
+  platform integrates against. Recorded during the Milestone 1 audit. The
+  platform never vendors product code; it integrates through versioned
+  contracts and pinned checkouts.
+
+products:
+  foundry:
+    role: profiling-and-measurement
+    repository: https://github.com/yashlabs-trying/tesseract-foundry
+    visibility: public
+    default_branch: main
+    pinned_commit: b8a70306d2c5d40b73156593987b3c8fab10cd29
+    upstream_main_commit: b8a70306d2c5d40b73156593987b3c8fab10cd29
+    python_package: foundry
+    python_version: "1.0.0"
+    emits_contract: tesseract.performance-profile.v1
+    historical_test_claim: "101/101 passing (not yet reproduced; see docs/AUDIT.md)"
+
+  fusion:
+    role: placement-and-reservation
+    repository: https://github.com/yashlabs-trying/tesseract-fusion
+    visibility: private
+    default_branch: main
+    pinned_commit: c0f4eb9838c6203e185449989a932475a37ee827
+    upstream_main_commit: c0f4eb9838c6203e185449989a932475a37ee827
+    python_package: fusion
+    python_version: "0.1.0"
+    historical_test_claim: "194 passing, 1 skip (not yet reproduced; see docs/AUDIT.md)"
+
+  ignite:
+    role: deployment-and-routing
+    repository: https://github.com/yashlabs-trying/kubbernetd-saver
+    visibility: public
+    default_branch: main
+    # Local validated revision, 3 commits ahead of origin/main.
+    pinned_commit: df227307a916a1ec3d3fadab9a28cb2cdb14e911
+    upstream_main_commit: cae22248f0fd3a9f9078af13aa4208950743e602
+    python_package: kubbernetd
+    python_version: "0.1.0"
+    crd: replicagroups.kubbernetd.io
+    push_status: >-
+      origin/main is a protected branch requiring the "k8s-e2e" status check.
+      The 3 validated commits (ddb01e8, f6d131c, df22730) are already on
+      origin/fix/code-issues and proposed via PR #1; direct push to main was
+      rejected by branch protection. No work is lost.
+    historical_test_claim: "91/91 unit, 15/15 k8s lifecycle, 100/100 cold requests (not yet reproduced)"
+
+future_products:
+  adaptive:
+    role: adaptive-quantization
+    repository: https://github.com/yashlabs-trying/tesseract-adaptive
+    visibility: private
+    default_branch: main
+    pinned_commit: 06e2bf37861323f6a52fe20671992c45599590ff
+    python_package: adaptive
+    python_version: "0.1.0"
+    status: under-development
+    integration: optional-and-disabled
+    note: >-
+      Has uncommitted work in progress locally (M3 controller). The platform
+      integrates through an optional AdaptivePrecisionProvider contract and
+      must operate fully when Adaptive is absent.
+
+legacy:
+  foundary:
+    repository: https://github.com/yashlabs-trying/tesseract-foundary
+    pinned_commit: 2fe7a4407d51585c8c8913caaf51f9972c3baab3
+    reason: >-
+      Misspelled legacy repository. Contains a model-serving API (v5.0.0) with
+      no collected tests. NOT the canonical Foundry product. Retained as a
+      possible reference model server; not integrated.

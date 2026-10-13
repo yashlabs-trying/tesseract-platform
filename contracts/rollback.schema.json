@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.platform.rollback.v1",
+  "title": "Tesseract Platform Rollback Plan",
+  "description": "A rollback / compensation plan. Because Fusion capacity and Kubernetes objects cannot be updated in one transaction, each step is an explicit compensating action with its own status.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "tesseract.platform.rollback.v1" },
+    "rollback_id": { "type": "string" },
+    "operation_id": { "type": "string" },
+    "target_type": { "enum": ["reservation", "deployment", "precision"] },
+    "target_id": { "type": "string" },
+    "reason": { "type": "string" },
+    "state": { "enum": ["PENDING", "IN_PROGRESS", "COMPLETED", "FAILED"] },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["component", "action", "status"],
+        "properties": {
+          "component": { "enum": ["ignite", "fusion", "foundry", "adaptive", "platform"] },
+          "action": { "type": "string" },
+          "status": { "enum": ["pending", "done", "failed", "skipped"] },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["schema_version", "rollback_id", "operation_id", "target_type", "target_id", "state"]
+}
