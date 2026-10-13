@@ -1,0 +1,11 @@
+{
+  "name": "local-lifecycle",
+  "description": "In-process orchestration baseline: full submit->active lifecycle with fixture providers.",
+  "model_id": "qwen3-0.6b",
+  "precision": "bf16",
+  "concurrency": 10,
+  "request_count": 100,
+  "replicas": 1,
+  "min_gpu_count": 1,
+  "slo_ttft_p95_ms": 500.0
+}

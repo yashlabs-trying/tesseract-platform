@@ -1,0 +1,38 @@
+# Least-privilege RBAC for the platform control plane.
+# The platform only needs to manage Ignite ReplicaGroups and the model
+# Deployments/Services it owns, within its own namespace.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tesseract-platform
+  namespace: tesseract
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: tesseract-platform
+  namespace: tesseract
+rules:
+  - apiGroups: ["kubbernetd.io"]
+    resources: ["replicagroups"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: [""]
+    resources: ["pods", "services", "endpoints", "configmaps"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tesseract-platform
+  namespace: tesseract
+subjects:
+  - kind: ServiceAccount
+    name: tesseract-platform
+    namespace: tesseract
+roleRef:
+  kind: Role
+  name: tesseract-platform
+  apiGroup: rbac.authorization.k8s.io

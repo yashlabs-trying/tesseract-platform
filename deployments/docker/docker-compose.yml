@@ -1,0 +1,37 @@
+# Local development stack for the Tesseract platform.
+#
+# The platform can run alone (control plane only). Foundry/Fusion/Ignite are
+# listed as optional services: uncomment and point at their images/checkouts
+# when you want a full stack. Nothing here requires a GPU.
+services:
+  platform:
+    build:
+      context: ../..
+      dockerfile: deployments/docker/Dockerfile
+    ports:
+      - "8088:8088"
+    environment:
+      TESSERACT_STATE_DSN: "sqlite:///./var/platform.db"
+      TESSERACT_FOUNDRY_URL: "http://foundry:8001"
+      TESSERACT_FUSION_URL: "http://fusion:8002"
+      TESSERACT_IGNITE_NAMESPACE: "tesseract"
+      TESSERACT_CONTROLLER_MODE: "observe_only"
+      TESSERACT_ADAPTIVE_ENABLED: "false"
+    volumes:
+      - platform-var:/app/var
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8088/healthz')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # foundry:
+  #   image: tesseract-foundry:1.0.0
+  #   ports: ["8001:8001"]
+  #
+  # fusion:
+  #   image: tesseract-fusion:0.1.0
+  #   ports: ["8002:8002"]
+
+volumes:
+  platform-var:

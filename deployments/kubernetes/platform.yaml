@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tesseract-platform
+  namespace: tesseract
+data:
+  TESSERACT_STATE_DSN: "sqlite:///./var/platform.db"
+  TESSERACT_API_HOST: "0.0.0.0"
+  TESSERACT_API_PORT: "8088"
+  TESSERACT_IGNITE_NAMESPACE: "tesseract"
+  TESSERACT_CONTROLLER_MODE: "observe_only"
+  TESSERACT_CONTROLLER_ACTION_BUDGET: "0"
+  TESSERACT_ADAPTIVE_ENABLED: "false"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tesseract-platform
+  namespace: tesseract
+  labels:
+    app: tesseract-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tesseract-platform
+  template:
+    metadata:
+      labels:
+        app: tesseract-platform
+    spec:
+      serviceAccountName: tesseract-platform
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+      containers:
+        - name: platform
+          image: tesseract-platform:0.1.0
+          imagePullPolicy: IfNotPresent
+          command: ["tesseract-platform", "serve"]
+          ports:
+            - containerPort: 8088
+          envFrom:
+            - configMapRef:
+                name: tesseract-platform
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8088
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8088
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop: ["ALL"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tesseract-platform
+  namespace: tesseract
+  labels:
+    app: tesseract-platform
+spec:
+  selector:
+    app: tesseract-platform
+  ports:
+    - name: http
+      port: 8088
+      targetPort: 8088

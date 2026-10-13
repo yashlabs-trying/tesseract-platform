@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.platform.precision-profile.v1",
+  "title": "Tesseract Platform Precision Profile Reference",
+  "description": "Platform-facing reference to an Adaptive precision profile plus the recommendation metadata the platform needs. This is a RESERVED contract: the platform operates fully when no provider is installed.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "tesseract.platform.precision-profile.v1" },
+    "profile_ref": {
+      "type": "string",
+      "description": "Opaque identifier resolved by the Adaptive provider, e.g. adaptive://model/llama-3.1-8b/awq-int4."
+    },
+    "model_id": { "type": "string" },
+    "model_revision": { "type": "string" },
+    "runtime": {
+      "enum": ["torch_eager", "torch_compile", "mps", "cuda", "vllm", "sglang", "tensorrt_llm", "llama_cpp"]
+    },
+    "method": {
+      "enum": ["reference", "gptq", "awq", "bitsandbytes_int8", "bitsandbytes_nf4", "fp8", "gguf"]
+    },
+    "deployable": { "type": "boolean" },
+    "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] },
+    "bits": { "enum": [4, 8, 16, 32] },
+    "weight_memory_gb": { "type": "number", "minimum": 0 },
+    "quality_certificate_ref": {
+      "type": "string",
+      "description": "Reference to a validated quality certificate. Absent means the profile is not quality-certified."
+    },
+    "backend_compatibility": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Runtimes/backends the profile is known to work with."
+    },
+    "transition_overhead_ms": { "type": "number", "minimum": 0 },
+    "provenance": { "type": "string" }
+  },
+  "required": [
+    "schema_version",
+    "profile_ref",
+    "model_id",
+    "runtime",
+    "method",
+    "deployable",
+    "evidence"
+  ]
+}
