@@ -31,6 +31,11 @@ dev = [
     "mypy>=1.11",
 ]
 models = ["transformers>=4.44"]
+gpu = [
+    "bitsandbytes>=0.43",
+    "auto-gptq>=0.7; platform_system != 'Darwin'",
+    "autoawq>=0.2; platform_system != 'Darwin'",
+]
 all = ["tesseract-adaptive[torch,models,dev]"]
 
 [project.scripts]

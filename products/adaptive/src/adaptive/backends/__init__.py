@@ -28,6 +28,11 @@ from adaptive.backends.base import (
     DeploymentPlan,
     plan_document,
 )
+from adaptive.backends.executors import (
+    bitsandbytes_executor,
+    default_executor,
+    fp8_executor,
+)
 
 __all__ = [
     "DEPLOYMENT_PLAN_SCHEMA",
@@ -41,9 +46,12 @@ __all__ = [
     "GptqBackend",
     "available_backends",
     "backends_for_runtime",
+    "bitsandbytes_executor",
     "cuda_available",
     "cuda_device_name",
     "default_backends",
+    "default_executor",
+    "fp8_executor",
     "get_backend",
     "package_available",
     "plan_document",

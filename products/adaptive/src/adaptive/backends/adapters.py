@@ -88,13 +88,15 @@ class Fp8Backend(BackendAdapter):
 
 
 def default_backends() -> tuple[BackendAdapter, ...]:
-    """Return the built-in production backend set."""
+    """Return the built-in production backend set with execution hooks."""
+    from adaptive.backends.executors import default_executor
+
     return (
-        GptqBackend(),
-        AwqBackend(),
-        BitsAndBytesInt8Backend(),
-        BitsAndBytesNf4Backend(),
-        Fp8Backend(),
+        GptqBackend(executor=default_executor(QuantMethod.gptq)),
+        AwqBackend(executor=default_executor(QuantMethod.awq)),
+        BitsAndBytesInt8Backend(executor=default_executor(QuantMethod.bitsandbytes_int8)),
+        BitsAndBytesNf4Backend(executor=default_executor(QuantMethod.bitsandbytes_nf4)),
+        Fp8Backend(executor=default_executor(QuantMethod.fp8)),
     )
 
 
