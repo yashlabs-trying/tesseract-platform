@@ -46,6 +46,7 @@ class Controller:
         self.current_profile_id = current_profile_id
         self.current_since = 0.0
         self.last_change_ts: float | None = None
+        self.last_seen_ts: float | None = None
         self.switch_timestamps: list[float] = []
         self.previous_profile_id: str | None = None
         self.automatic = automatic
@@ -93,6 +94,14 @@ class Controller:
     def recommend(self, snapshot: TelemetrySnapshot, now: float | None = None) -> ControlDecision:
         now = snapshot.timestamp_s if now is None else now
         current = self._option(self.current_profile_id)
+        automatic = self.automatic and self.validated
+
+        # fail safe on stale / out-of-order telemetry: never switch on a
+        # snapshot older than the last one observed
+        if self.last_seen_ts is not None and now < self.last_seen_ts:
+            return self._hold(current, "stale or out-of-order telemetry", now, automatic)
+        self.last_seen_ts = now
+
         pressure = snapshot.memory_pressure
         ttft_bad = snapshot.ttft_ms > self.policy.ttft_slo_ms
         itl_bad = snapshot.itl_ms > self.policy.itl_slo_ms
@@ -120,7 +129,6 @@ class Controller:
 
         dwell_remaining = self._dwell_remaining(now)
         cooldown_remaining = self._cooldown_remaining(now)
-        automatic = self.automatic and self.validated
 
         if down:
             target = self._downshift_target(current)
@@ -281,6 +289,8 @@ class Controller:
     def record_switch(self, profile_id: str, now: float, *, success: bool = True) -> None:
         if profile_id not in self.options:
             raise ConfigurationError(f"unknown profile: {profile_id}")
+        if profile_id == self.current_profile_id:
+            return  # idempotent: duplicate transition request is a no-op
         self.last_change_ts = now
         self.switch_timestamps.append(now)
         if not success:

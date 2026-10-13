@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import math
 
+from adaptive.errors import ConfigurationError
 from adaptive.models.architecture import LayerSpec, ModelArchitecture
 from adaptive.models.enums import DType, Granularity, QuantScheme, dtype_bytes
 from adaptive.models.quantization import PrecisionProfile, QuantConfig
@@ -27,7 +28,8 @@ def num_groups(layer: LayerSpec, config: QuantConfig) -> int:
     if config.granularity is Granularity.per_channel:
         return out_features
     group_size = config.group_size
-    assert group_size is not None
+    if group_size is None:  # defensive: QuantConfig validates, but asserts vanish under -O
+        raise ConfigurationError("per_group granularity requires a group_size")
     groups_per_row = math.ceil(in_features / group_size)
     return out_features * groups_per_row
 

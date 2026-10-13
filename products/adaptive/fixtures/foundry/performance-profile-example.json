@@ -22,5 +22,7 @@
   "ttft_p95_ms": 71.0,
   "itl_p50_ms": 9.0,
   "itl_p95_ms": 14.0,
-  "throughput_tps": 1850.0
+  "output_tokens_per_second": 1850.0,
+  "collection_timestamp": "2026-10-13T00:00:00Z",
+  "source_type": "benchmark"
 }

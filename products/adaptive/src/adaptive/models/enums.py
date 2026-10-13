@@ -91,7 +91,8 @@ class LayerFamily(str, Enum):
 class LayerRole(str, Enum):
     """Fine-grained structural role of a layer."""
 
-    token_embedding = "token_embedding"
+    # B105 is a false positive: this is an enum value, not a credential
+    token_embedding = "token_embedding"  # nosec B105
     attention_q = "attention_q"
     attention_k = "attention_k"
     attention_v = "attention_v"

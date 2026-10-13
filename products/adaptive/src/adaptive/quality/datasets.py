@@ -69,7 +69,8 @@ def make_synthetic_dataset(
     """Build a deterministic pseudo-random token dataset for tests."""
     import random
 
-    rng = random.Random(seed)
+    # deterministic test data; not a security-sensitive generator
+    rng = random.Random(seed)  # nosec B311
     sequences = tuple(
         tuple(rng.randrange(vocab_size) for _ in range(seq_len))
         for _ in range(num_sequences)

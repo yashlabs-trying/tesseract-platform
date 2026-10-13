@@ -79,6 +79,10 @@ def import_performance_profile(document: Mapping[str, Any]) -> BenchmarkMeasurem
         value = document.get(key)
         return float(value) if value is not None else None
 
+    # The canonical Foundry schema field is ``output_tokens_per_second``;
+    # ``throughput_tps`` is accepted as a legacy alias.
+    throughput = document.get("output_tokens_per_second", document.get("throughput_tps"))
+
     return BenchmarkMeasurement(
         profile_id=str(document["profile_id"]),
         model_id=str(document["model_id"]),
@@ -93,7 +97,7 @@ def import_performance_profile(document: Mapping[str, Any]) -> BenchmarkMeasurem
         ttft_p95_ms=optional_float("ttft_p95_ms"),
         itl_p50_ms=optional_float("itl_p50_ms"),
         itl_p95_ms=optional_float("itl_p95_ms"),
-        throughput_tps=optional_float("throughput_tps"),
+        throughput_tps=float(throughput) if throughput is not None else None,
         workload_concurrency=int(document.get("workload_concurrency", 1) or 1),
         evidence=_evidence(str(document["evidence_type"])),
         provenance=Provenance(

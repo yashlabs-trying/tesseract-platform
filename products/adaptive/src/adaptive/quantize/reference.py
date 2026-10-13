@@ -96,7 +96,8 @@ def _group_tensor(t: torch.Tensor, config: QuantConfig) -> tuple[torch.Tensor, i
     if config.granularity is Granularity.per_channel:
         return t.reshape(out_features, in_features), in_features, 0
     group_size = config.group_size
-    assert group_size is not None  # validated by QuantConfig
+    if group_size is None:  # defensive: QuantConfig validates, but asserts vanish under -O
+        raise ConfigurationError("per_group granularity requires a group_size")
     padding = (-in_features) % group_size
     if padding:
         t = torch.nn.functional.pad(t, (0, padding))
@@ -114,6 +115,8 @@ def quantize_tensor(t: torch.Tensor, config: QuantConfig) -> QuantizedTensor:
         raise ConfigurationError("quantize_tensor requires an integer config")
 
     work = t.to(torch.float32)
+    if not bool(torch.isfinite(work).all()):
+        raise ConfigurationError("quantization requires finite weights (no NaN/Inf)")
     grouped, _in_features, padding = _group_tensor(work, config)
 
     if config.scheme is QuantScheme.symmetric:
@@ -131,10 +134,14 @@ def quantize_tensor(t: torch.Tensor, config: QuantConfig) -> QuantizedTensor:
         minimum = grouped.amin(dim=1)
         maximum = grouped.amax(dim=1)
         scale = ((maximum - minimum) / (qmax - qmin)).clamp_min(_EPS)
-        zero = torch.round(qmin - minimum / scale).clamp(qmin, qmax)
+        # The zero point is NOT clamped to [qmin, qmax]: for one-sided data it
+        # legitimately falls outside that range, and the codes (which are
+        # clamped) still land in [qmin, qmax]. Clamping the zero point here
+        # would saturate half the representable range.
+        zero = torch.round(qmin - minimum / scale).to(torch.int32)
         codes = torch.round(grouped / scale.unsqueeze(1)) + zero.unsqueeze(1)
         codes = codes.clamp(qmin, qmax)
-        zero_points = zero.to(torch.int32)
+        zero_points = zero
         container = torch.uint8 if config.bits == 8 else torch.int8
 
     return QuantizedTensor(

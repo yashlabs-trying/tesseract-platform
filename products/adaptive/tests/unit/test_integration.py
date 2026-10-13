@@ -118,6 +118,23 @@ def test_foundry_export_comparison() -> None:
         assert profile["provenance"]["source"] == "adaptive"
 
 
+def test_foundry_throughput_field_naming() -> None:
+    # canonical Foundry field
+    canonical = {
+        "schema_version": "tesseract.performance-profile.v1",
+        "profile_id": "p",
+        "model_id": "m",
+        "evidence_type": "measured",
+        "output_tokens_per_second": 1234.0,
+    }
+    assert import_performance_profile(canonical).throughput_tps == 1234.0
+    # legacy alias still accepted
+    legacy = dict(canonical)
+    del legacy["output_tokens_per_second"]
+    legacy["throughput_tps"] = 999.0
+    assert import_performance_profile(legacy).throughput_tps == 999.0
+
+
 # ---- Fusion -------------------------------------------------------------
 
 
