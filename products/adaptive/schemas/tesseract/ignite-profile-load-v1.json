@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.ignite-profile-load.v1",
+  "title": "Tesseract Adaptive Ignite Profile Load",
+  "description": "Ignite profile load response with readiness and rollback signals.",
+  "type": "object",
+  "required": ["schema_version", "deployment_id", "profile_id", "accepted", "reason"],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.ignite-profile-load.v1" },
+    "deployment_id": { "type": "string" },
+    "profile_id": { "type": "string" },
+    "accepted": { "type": "boolean" },
+    "reason": { "type": "string" },
+    "transition": {
+      "type": ["object", "null"],
+      "properties": {
+        "from_profile_id": { "type": "string" },
+        "to_profile_id": { "type": "string" },
+        "replica_count": { "type": "integer", "minimum": 1 },
+        "steps": { "type": "array", "items": { "type": "string" } },
+        "max_unavailable": { "type": "integer", "minimum": 0 },
+        "in_place": { "type": "boolean" },
+        "readiness_signal": { "type": "string" },
+        "rollback_signal": { "type": "string" }
+      }
+    },
+    "readiness_signal": { "type": "string" },
+    "rollback_signal": { "type": "string" },
+    "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] }
+  },
+  "additionalProperties": false
+}

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from adaptive.models.architecture import ModelArchitecture
+from adaptive.models.controller import ControlDecision, SimulationResult, TelemetrySnapshot
 from adaptive.models.optimization import OptimizationResult
 from adaptive.models.quality import QualityReport
 from adaptive.models.quantization import PrecisionProfile
@@ -20,6 +21,9 @@ STORAGE_SCHEMA = "tesseract.adaptive.storage-breakdown.v1"
 SENSITIVITY_SCHEMA = "tesseract.adaptive.sensitivity-report.v1"
 QUALITY_SCHEMA = "tesseract.adaptive.quality-report.v1"
 OPTIMIZATION_SCHEMA = "tesseract.adaptive.optimization-result.v1"
+TELEMETRY_SCHEMA = "tesseract.adaptive.telemetry-snapshot.v1"
+DECISION_SCHEMA = "tesseract.adaptive.control-decision.v1"
+SIMULATION_SCHEMA = "tesseract.adaptive.controller-simulation.v1"
 SCHEMA_DIR = Path(__file__).resolve().parents[2] / "schemas" / "tesseract"
 
 
@@ -151,6 +155,30 @@ def optimization_document(result: OptimizationResult) -> dict[str, Any]:
         ],
         "evidence": result.evidence.value,
         "notes": list(result.notes),
+    }
+
+
+def telemetry_document(snapshot: TelemetrySnapshot) -> dict[str, Any]:
+    """Serialize a telemetry snapshot to a versioned JSON document."""
+    return {"schema_version": TELEMETRY_SCHEMA, **snapshot.model_dump(mode="json")}
+
+
+def decision_document(decision: ControlDecision) -> dict[str, Any]:
+    """Serialize a controller decision to a versioned JSON document."""
+    return {"schema_version": DECISION_SCHEMA, **decision.model_dump(mode="json")}
+
+
+def simulation_document(result: SimulationResult) -> dict[str, Any]:
+    """Serialize a controller simulation to a versioned JSON document."""
+    return {
+        "schema_version": SIMULATION_SCHEMA,
+        "switch_count": result.switch_count,
+        "rollback_count": result.rollback_count,
+        "direction_changes": result.direction_changes,
+        "oscillated": result.oscillated,
+        "final_profile_id": result.final_profile_id,
+        "evidence": result.evidence.value,
+        "decisions": [decision_document(decision) for decision in result.decisions],
     }
 
 

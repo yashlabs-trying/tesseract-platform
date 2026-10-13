@@ -3,6 +3,18 @@
 from __future__ import annotations
 
 from adaptive.models.architecture import LayerSpec, ModelArchitecture
+from adaptive.models.controller import (
+    ControlDecision,
+    ControllerAction,
+    ControllerPolicy,
+    ProfileOption,
+    QualityCertificate,
+    RollbackPlan,
+    SimulationResult,
+    SwitchPlan,
+    SwitchStep,
+    TelemetrySnapshot,
+)
 from adaptive.models.cost import InferenceCost
 from adaptive.models.enums import (
     DType,
@@ -47,6 +59,9 @@ from adaptive.models.storage import StorageBreakdown
 __all__ = [
     "ArtifactManifest",
     "CandidateEvaluation",
+    "ControlDecision",
+    "ControllerAction",
+    "ControllerPolicy",
     "DType",
     "EvidenceType",
     "ExperimentManifest",
@@ -63,16 +78,23 @@ __all__ = [
     "OptimizationConstraints",
     "OptimizationResult",
     "PrecisionProfile",
+    "ProfileOption",
+    "QualityCertificate",
     "QualityMetric",
     "QualityReport",
     "QualityThreshold",
     "QuantConfig",
     "QuantMethod",
     "QuantScheme",
+    "RollbackPlan",
     "RuntimeBackend",
     "SensitivityMethod",
     "SensitivityReport",
+    "SimulationResult",
     "StorageBreakdown",
+    "SwitchPlan",
+    "SwitchStep",
+    "TelemetrySnapshot",
     "baseline_config",
     "dtype_bytes",
     "dtype_from_torch_name",

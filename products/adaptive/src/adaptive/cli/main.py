@@ -255,5 +255,64 @@ def optimize(
             typer.secho(f"  violation: {violation}", fg=typer.colors.YELLOW)
 
 
+@app.command()
+def controller(
+    config: Path = typer.Argument(..., exists=True, readable=True),
+    scenario: str = typer.Option("pressure", "--scenario", help="steady|pressure|burst"),
+    tolerance: float = typer.Option(0.05, "--tolerance"),
+    group_size: int = typer.Option(16, "--group-size"),
+    model_id: str | None = typer.Option(None, "--model-id"),
+) -> None:
+    """Simulate the adaptive controller on a telemetry scenario (no GPU required)."""
+    configure_logging()
+    try:
+        from adaptive.controller import ControllerPolicy, ProfileOption, run_simulation
+        from adaptive.optimizer import AnalyticCostModel
+        from adaptive.telemetry import (
+            memory_pressure_scenario,
+            steady_scenario,
+            traffic_burst_scenario,
+        )
+
+        arch = ModelAnalyzer().analyze_file(config, model_id=model_id)
+        cost_model = AnalyticCostModel()
+        degradations = {4: 0.05, 8: 0.01, 16: 0.0}
+        options = []
+        for bits in (4, 8, 16):
+            profile = uniform_profile(arch, bits, group_size=group_size)
+            cost = cost_model.estimate(arch, profile)
+            options.append(
+                ProfileOption(
+                    profile_id=profile.profile_id,
+                    precision_bits=bits,
+                    estimated_cost=cost.lower_cost,
+                    weight_bytes=cost.weight_bytes,
+                    quality_degradation=degradations[bits],
+                )
+            )
+        if scenario == "steady":
+            snapshots = steady_scenario()
+        elif scenario == "pressure":
+            snapshots = memory_pressure_scenario()
+        elif scenario == "burst":
+            snapshots = traffic_burst_scenario()
+        else:
+            typer.secho(f"error: unknown scenario {scenario}", fg=typer.colors.RED, err=True)
+            raise typer.Exit(code=1)
+        policy = ControllerPolicy(quality_tolerance=tolerance, min_dwell_s=0.0, cooldown_s=0.0)
+        result = run_simulation(policy, options, snapshots, automatic=True)
+    except AdaptiveError as exc:
+        typer.secho(f"error: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(f"scenario:   {scenario}")
+    typer.echo(f"switches:   {result.switch_count}")
+    typer.echo(f"rollbacks:  {result.rollback_count}")
+    typer.echo(f"oscillated: {result.oscillated}")
+    typer.echo(f"final:      {result.final_profile_id}")
+    for decision in result.decisions:
+        typer.echo(f"  t={decision.action.value:<10} {decision.reason}")
+
+
 if __name__ == "__main__":  # pragma: no cover
     app()

@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.profile-comparison.v1",
+  "title": "Tesseract Adaptive Profile Comparison",
+  "description": "Exported profile comparison for Foundry, with confidence and provenance.",
+  "type": "object",
+  "required": ["schema_version", "model_id", "algorithm", "profiles"],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.profile-comparison.v1" },
+    "model_id": { "type": "string" },
+    "structural_fingerprint": { "type": "string" },
+    "algorithm": { "enum": ["greedy", "beam"] },
+    "selected_profile_id": { "type": ["string", "null"] },
+    "pareto_frontier": { "type": "array", "items": { "type": "string" } },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["profile_id", "bits", "confidence", "provenance"],
+        "properties": {
+          "profile_id": { "type": "string" },
+          "name": { "type": "string" },
+          "bits": { "type": "array", "items": { "enum": [4, 8, 16, 32] } },
+          "total_bytes": { "type": "integer", "minimum": 0 },
+          "lower_cost": { "type": "number" },
+          "estimated_latency_ms": { "type": "number" },
+          "estimated_throughput_tps": { "type": "number" },
+          "predicted_quality": { "type": "number" },
+          "predicted_degradation": { "type": "number" },
+          "feasible": { "type": "boolean" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "provenance": {
+            "type": "object",
+            "required": ["source"],
+            "properties": {
+              "source": { "type": "string" },
+              "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

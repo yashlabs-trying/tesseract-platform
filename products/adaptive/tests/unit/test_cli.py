@@ -64,3 +64,13 @@ def test_optimize_command() -> None:
     assert result.exit_code == 0
     assert "algorithm:" in result.stdout
     assert "selected:" in result.stdout
+
+
+def test_controller_command() -> None:
+    result = runner.invoke(
+        app,
+        ["controller", str(FIXTURES / "tiny-llama.json"), "--scenario", "pressure"],
+    )
+    assert result.exit_code == 0
+    assert "switches:" in result.stdout
+    assert "oscillated:" in result.stdout

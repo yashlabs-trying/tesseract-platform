@@ -10,10 +10,9 @@ analyzes a model, measures where precision matters, generates candidate
 profiles, validates them against quality, and adapts as serving pressure
 changes.
 
-> Status: **Milestones 1 (Foundation) and 2 (Intelligence)** are implemented
-> and tested. Later milestones (adaptation, integration, GPU readiness) are
-> scaffolded with documented interfaces only. Nothing in this repository claims
-> GPU performance that has not been measured.
+> Status: **Milestones 1-4** are implemented and tested. GPU readiness (M5) is
+> planned. Nothing in this repository claims GPU performance that has not been
+> measured.
 
 ## What works today (M1 + M2)
 
@@ -44,6 +43,25 @@ changes.
   Pareto frontier and uniform 4/8-bit baselines.
 - **Synthetic reference transformer** - a real small decoder-only transformer
   so M2 runs deterministically on CPU/MPS without downloads.
+
+**Adaptation (M3)**
+
+- **Telemetry** - measured/simulated snapshots and deterministic scenarios
+  (steady, memory pressure, traffic burst).
+- **Adaptive controller** - downshift/upshift recommendations with hysteresis,
+  minimum dwell time, cooldown, per-hour rate limit, safe replica-based switch
+  plans, rollback plans, and recommendation-only mode until validated.
+- **Simulation & fault injection** - timeline simulation with switch-failure
+  injection and automatic rollback.
+
+**Integration (M4)**
+
+- **Foundry** - import `tesseract.performance-profile.v1` measurements; export
+  profile comparisons with confidence and provenance.
+- **Fusion** - profile memory requirements, placement-constrained precision
+  recommendation, and capacity-improvement projection.
+- **Ignite** - load prevalidated profiles, plan safe replica transitions, and
+  expose readiness/rollback signals.
 
 ## Quick start
 
@@ -83,10 +101,10 @@ src/adaptive/
   sensitivity/   M2 - layer sensitivity methods
   quality/       M2 - metrics, dataset isolation, thresholds, harness
   optimizer/     M2 - cost model, quality estimator, greedy/beam, Pareto
+  telemetry/     M3 - telemetry snapshots, sources, scenarios
+  controller/    M3 - adaptive controller, simulation, rollback
+  integration/   M4 - Foundry / Fusion / Ignite adapters
   config/        settings (constraints, controller policy)
-  controller/    M3 - adaptive runtime controller (interface only)
-  telemetry/     M3 - telemetry ingestion (interface only)
-  integration/   M4 - Foundry / Fusion / Ignite adapters (interface only)
 schemas/tesseract/  versioned JSON schemas
 docs/ARCHITECTURE.md
 ```

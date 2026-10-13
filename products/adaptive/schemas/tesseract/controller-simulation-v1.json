@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.controller-simulation.v1",
+  "title": "Tesseract Adaptive Controller Simulation",
+  "description": "Outcome of a controller simulation over a telemetry timeline.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "switch_count",
+    "rollback_count",
+    "oscillated",
+    "decisions"
+  ],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.controller-simulation.v1" },
+    "switch_count": { "type": "integer", "minimum": 0 },
+    "rollback_count": { "type": "integer", "minimum": 0 },
+    "direction_changes": { "type": "integer", "minimum": 0 },
+    "oscillated": { "type": "boolean" },
+    "final_profile_id": { "type": "string" },
+    "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["schema_version", "action", "current_profile_id", "recommended_profile_id"]
+      }
+    }
+  },
+  "additionalProperties": false
+}

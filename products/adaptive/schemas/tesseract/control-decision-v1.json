@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.control-decision.v1",
+  "title": "Tesseract Adaptive Control Decision",
+  "description": "Controller recommendation for one telemetry snapshot.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "action",
+    "current_profile_id",
+    "recommended_profile_id",
+    "reason"
+  ],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.control-decision.v1" },
+    "action": { "enum": ["hold", "downshift", "upshift", "rollback"] },
+    "current_profile_id": { "type": "string" },
+    "recommended_profile_id": { "type": "string" },
+    "reason": { "type": "string" },
+    "automatic": { "type": "boolean" },
+    "rate_limited": { "type": "boolean" },
+    "dwell_remaining_s": { "type": "number" },
+    "expected_memory_gb": { "type": "number" },
+    "expected_cost": { "type": "number" },
+    "expected_quality_degradation": { "type": "number" },
+    "switch_plan": { "type": ["object", "null"] },
+    "rollback_plan": { "type": ["object", "null"] },
+    "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] }
+  },
+  "additionalProperties": false
+}
