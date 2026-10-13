@@ -42,8 +42,10 @@ supports it.
                          └──────────────────────┘
 ```
 
-Milestone 1 implements A, C and the storage/accounting foundation. B, D, E, F,
-G are scaffolded with documented interfaces in their packages.
+Milestones 1 and 2 implement A (Analyzer), B (Sensitivity), C (Profile
+Generator + reference quantizer), D (Quality Engine), E (Optimizer) and the
+storage/accounting foundation. F (Controller) and G (Integration) are
+scaffolded with documented interfaces in their packages.
 
 ## 3. A. Model Analyzer
 
@@ -146,7 +148,7 @@ GPU benchmark results are generated.
 - **M1 Foundation** - architecture, analyzer, reference quantizer, storage
   accounting, schemas, integrity. *(implemented)*
 - **M2 Intelligence** - sensitivity, mixed-precision optimizer, quality
-  evaluations.
+  evaluations. *(implemented)*
 - **M3 Adaptation** - telemetry-driven controller, policies, hysteresis,
   rollback simulation.
 - **M4 Integration** - Foundry/Fusion/Ignite adapters and end-to-end Mac tests.

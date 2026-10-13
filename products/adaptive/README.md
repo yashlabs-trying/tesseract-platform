@@ -10,12 +10,14 @@ analyzes a model, measures where precision matters, generates candidate
 profiles, validates them against quality, and adapts as serving pressure
 changes.
 
-> Status: **Milestone 1 (Foundation)** is implemented and tested. Later
-> milestones (sensitivity, optimization, adaptation, integration) are
+> Status: **Milestones 1 (Foundation) and 2 (Intelligence)** are implemented
+> and tested. Later milestones (adaptation, integration, GPU readiness) are
 > scaffolded with documented interfaces only. Nothing in this repository claims
 > GPU performance that has not been measured.
 
-## What works today (M1)
+## What works today (M1 + M2)
+
+**Foundation (M1)**
 
 - **Model Analyzer** - normalizes Hugging Face `config.json` files into a
   typed architecture via pluggable family adapters (Llama, Qwen2, Qwen3,
@@ -27,9 +29,21 @@ changes.
   CPU and Apple MPS, with int4 packing.
 - **Precision profiles** - baseline, uniform and mixed-precision profile
   generation with runtime compatibility validation.
-- **Serialized storage accounting** - packed payload, scales, zero points,
-  metadata and retained unquantized parameters.
 - **Versioned JSON schemas** and **artifact integrity manifests**.
+
+**Intelligence (M2)**
+
+- **Sensitivity analyzer** - per-layer weight error, activation-weighted error,
+  diagonal Hessian-inspired error, gradient-based Fisher importance and
+  ground-truth output divergence, with family attribution and rankings.
+- **Quality engine** - perplexity, output divergence, task accuracy,
+  long-context and structured-output metrics with enforced
+  calibration/evaluation dataset isolation and threshold gating.
+- **Precision optimizer** - greedy and beam-search optimizers minimizing
+  estimated cost under quality/latency/memory/throughput constraints, with a
+  Pareto frontier and uniform 4/8-bit baselines.
+- **Synthetic reference transformer** - a real small decoder-only transformer
+  so M2 runs deterministically on CPU/MPS without downloads.
 
 ## Quick start
 
@@ -61,13 +75,15 @@ no CUDA, TensorRT, NCCL or bitsandbytes kernels required.
 
 ```
 src/adaptive/
-  models/        domain models (architecture, quantization, storage, integrity)
+  models/        domain models (architecture, quantization, storage, integrity,
+                 sensitivity, quality, cost, optimization)
   analyzer/      HF config adapters + registry
-  quantize/      reference quantizer, packing, profiles, storage accounting
+  quantize/      reference quantizer, packing, profiles, storage, model apply
+  nets/          synthetic reference transformer (M2)
+  sensitivity/   M2 - layer sensitivity methods
+  quality/       M2 - metrics, dataset isolation, thresholds, harness
+  optimizer/     M2 - cost model, quality estimator, greedy/beam, Pareto
   config/        settings (constraints, controller policy)
-  sensitivity/   M2 - layer sensitivity (interface only)
-  quality/       M2 - quality evaluation (interface only)
-  optimizer/     M2 - constrained precision optimizer (interface only)
   controller/    M3 - adaptive runtime controller (interface only)
   telemetry/     M3 - telemetry ingestion (interface only)
   integration/   M4 - Foundry / Fusion / Ignite adapters (interface only)

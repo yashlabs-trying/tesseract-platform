@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.sensitivity-report.v1",
+  "title": "Tesseract Adaptive Sensitivity Report",
+  "description": "Layer-wise sensitivity rankings for one model and bit width.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "model_id",
+    "structural_fingerprint",
+    "calibration_fingerprint",
+    "methods",
+    "bits",
+    "scores",
+    "rankings",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.sensitivity-report.v1" },
+    "model_id": { "type": "string" },
+    "structural_fingerprint": { "type": "string" },
+    "calibration_fingerprint": { "type": "string" },
+    "methods": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "weight_error",
+          "activation_weighted",
+          "diagonal_hessian",
+          "fisher",
+          "output_divergence"
+        ]
+      }
+    },
+    "bits": { "enum": [4, 8] },
+    "group_size": { "type": ["integer", "null"] },
+    "scores": {
+      "type": "object",
+      "additionalProperties": { "type": "object", "additionalProperties": { "type": "number" } }
+    },
+    "raw_scores": {
+      "type": "object",
+      "additionalProperties": { "type": "object", "additionalProperties": { "type": "number" } }
+    },
+    "rankings": {
+      "type": "object",
+      "additionalProperties": { "type": "array", "items": { "type": "string" } }
+    },
+    "family_attribution": {
+      "type": "object",
+      "additionalProperties": { "type": "object", "additionalProperties": { "type": "number" } }
+    },
+    "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

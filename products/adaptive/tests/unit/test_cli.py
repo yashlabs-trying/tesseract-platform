@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 from typer.testing import CliRunner
 
 from adaptive.cli.main import app
@@ -45,3 +46,21 @@ def test_analyze_unknown_model_exits_nonzero(tmp_path: Path) -> None:
     config.write_text('{"model_type": "mamba", "hidden_size": 8}')
     result = runner.invoke(app, ["analyze", str(config)])
     assert result.exit_code == 1
+
+
+def test_sensitivity_command() -> None:
+    pytest.importorskip("torch")
+    result = runner.invoke(app, ["sensitivity", str(FIXTURES / "tiny-llama.json")])
+    assert result.exit_code == 0
+    assert "[weight_error]" in result.stdout
+    assert "score=" in result.stdout
+
+
+def test_optimize_command() -> None:
+    pytest.importorskip("torch")
+    result = runner.invoke(
+        app, ["optimize", str(FIXTURES / "tiny-llama.json"), "--tolerance", "0.5"]
+    )
+    assert result.exit_code == 0
+    assert "algorithm:" in result.stdout
+    assert "selected:" in result.stdout

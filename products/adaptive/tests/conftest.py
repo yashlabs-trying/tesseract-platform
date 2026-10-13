@@ -53,3 +53,44 @@ def tiny_config() -> dict[str, Any]:
 @pytest.fixture
 def analyzer() -> ModelAnalyzer:
     return ModelAnalyzer()
+
+
+@pytest.fixture
+def tiny_architecture(analyzer: ModelAnalyzer, tiny_config: dict[str, Any]):
+    return analyzer.analyze(tiny_config, model_id="tiny")
+
+
+@pytest.fixture
+def tiny_model(tiny_architecture):
+    pytest.importorskip("torch")
+    from adaptive.nets import ReferenceTransformer
+
+    return ReferenceTransformer.from_architecture(tiny_architecture, seed=0)
+
+
+@pytest.fixture
+def calibration_dataset(tiny_config: dict[str, Any]):
+    from adaptive.quality import DatasetSplit, make_synthetic_dataset
+
+    return make_synthetic_dataset(
+        "calibration",
+        DatasetSplit.calibration,
+        vocab_size=tiny_config["vocab_size"],
+        num_sequences=4,
+        seq_len=16,
+        seed=1,
+    )
+
+
+@pytest.fixture
+def evaluation_dataset(tiny_config: dict[str, Any]):
+    from adaptive.quality import DatasetSplit, make_synthetic_dataset
+
+    return make_synthetic_dataset(
+        "evaluation",
+        DatasetSplit.evaluation,
+        vocab_size=tiny_config["vocab_size"],
+        num_sequences=3,
+        seq_len=16,
+        seed=2,
+    )

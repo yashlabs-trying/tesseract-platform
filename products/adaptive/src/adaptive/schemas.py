@@ -8,12 +8,18 @@ from pathlib import Path
 from typing import Any
 
 from adaptive.models.architecture import ModelArchitecture
+from adaptive.models.optimization import OptimizationResult
+from adaptive.models.quality import QualityReport
 from adaptive.models.quantization import PrecisionProfile
+from adaptive.models.sensitivity import SensitivityReport
 from adaptive.models.storage import StorageBreakdown
 
 ARCHITECTURE_SCHEMA = "tesseract.adaptive.model-architecture.v1"
 PROFILE_SCHEMA = "tesseract.adaptive.precision-profile.v1"
 STORAGE_SCHEMA = "tesseract.adaptive.storage-breakdown.v1"
+SENSITIVITY_SCHEMA = "tesseract.adaptive.sensitivity-report.v1"
+QUALITY_SCHEMA = "tesseract.adaptive.quality-report.v1"
+OPTIMIZATION_SCHEMA = "tesseract.adaptive.optimization-result.v1"
 SCHEMA_DIR = Path(__file__).resolve().parents[2] / "schemas" / "tesseract"
 
 
@@ -78,6 +84,73 @@ def storage_document(
         "quantized_bytes": breakdown.total_bytes,
         "compression_ratio": breakdown.compression_ratio,
         "breakdown": breakdown.model_dump(mode="json"),
+    }
+
+
+def sensitivity_document(report: SensitivityReport) -> dict[str, Any]:
+    """Serialize a sensitivity report to a versioned JSON document."""
+    return {
+        "schema_version": SENSITIVITY_SCHEMA,
+        "model_id": report.model_id,
+        "structural_fingerprint": report.structural_fingerprint,
+        "calibration_fingerprint": report.calibration_fingerprint,
+        "methods": [method.value for method in report.methods],
+        "bits": report.bits,
+        "group_size": report.group_size,
+        "scores": report.scores,
+        "raw_scores": report.raw_scores,
+        "rankings": report.rankings,
+        "family_attribution": report.family_attribution,
+        "evidence": report.evidence.value,
+        "notes": list(report.notes),
+    }
+
+
+def quality_document(report: QualityReport) -> dict[str, Any]:
+    """Serialize a quality report to a versioned JSON document."""
+    return {
+        "schema_version": QUALITY_SCHEMA,
+        "model_id": report.model_id,
+        "structural_fingerprint": report.structural_fingerprint,
+        "profile_id": report.profile_id,
+        "manifest": report.manifest.model_dump(mode="json"),
+        "metrics": {
+            name: result.model_dump(mode="json") for name, result in report.metrics.items()
+        },
+        "evidence": report.evidence.value,
+        "notes": list(report.notes),
+    }
+
+
+def optimization_document(result: OptimizationResult) -> dict[str, Any]:
+    """Serialize an optimization result to a versioned JSON document."""
+    return {
+        "schema_version": OPTIMIZATION_SCHEMA,
+        "model_id": result.model_id,
+        "structural_fingerprint": result.structural_fingerprint,
+        "algorithm": result.algorithm,
+        "constraints": result.constraints.model_dump(mode="json"),
+        "selected_profile_id": result.selected_profile_id,
+        "pareto_frontier": list(result.pareto_frontier),
+        "uniform_4_profile_id": result.uniform_4_profile_id,
+        "uniform_8_profile_id": result.uniform_8_profile_id,
+        "candidates": [
+            {
+                "profile_id": candidate.profile_id,
+                "name": candidate.profile.name,
+                "bits": sorted(candidate.profile.distinct_bits()),
+                "total_bytes": candidate.storage.total_bytes,
+                "lower_cost": candidate.cost.lower_cost,
+                "estimated_latency_ms": candidate.cost.estimated_latency_ms,
+                "predicted_quality": candidate.predicted_quality,
+                "predicted_degradation": candidate.predicted_degradation,
+                "feasible": candidate.feasible,
+                "violations": list(candidate.violations),
+            }
+            for candidate in result.candidates
+        ],
+        "evidence": result.evidence.value,
+        "notes": list(result.notes),
     }
 
 

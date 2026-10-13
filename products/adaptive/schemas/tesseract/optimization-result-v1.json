@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.optimization-result.v1",
+  "title": "Tesseract Adaptive Optimization Result",
+  "description": "Constrained precision optimization outcome.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "model_id",
+    "structural_fingerprint",
+    "algorithm",
+    "constraints",
+    "candidates",
+    "pareto_frontier",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.optimization-result.v1" },
+    "model_id": { "type": "string" },
+    "structural_fingerprint": { "type": "string" },
+    "algorithm": { "enum": ["greedy", "beam"] },
+    "constraints": { "type": "object" },
+    "selected_profile_id": { "type": ["string", "null"] },
+    "pareto_frontier": { "type": "array", "items": { "type": "string" } },
+    "uniform_4_profile_id": { "type": ["string", "null"] },
+    "uniform_8_profile_id": { "type": ["string", "null"] },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "profile_id",
+          "name",
+          "bits",
+          "total_bytes",
+          "lower_cost",
+          "predicted_degradation",
+          "feasible"
+        ],
+        "properties": {
+          "profile_id": { "type": "string" },
+          "name": { "type": "string" },
+          "bits": { "type": "array", "items": { "enum": [4, 8, 16, 32] } },
+          "total_bytes": { "type": "integer", "minimum": 0 },
+          "lower_cost": { "type": "number" },
+          "estimated_latency_ms": { "type": "number" },
+          "predicted_quality": { "type": "number" },
+          "predicted_degradation": { "type": "number" },
+          "feasible": { "type": "boolean" },
+          "violations": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

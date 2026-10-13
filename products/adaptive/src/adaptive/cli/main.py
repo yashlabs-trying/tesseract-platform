@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import typer
 
@@ -19,6 +20,11 @@ from adaptive.quantize import (
     uniform_profile,
     validate_profile,
 )
+
+if TYPE_CHECKING:
+    from torch import nn
+
+    from adaptive.quality import TokenDataset
 
 app = typer.Typer(
     name="adaptive",
@@ -130,6 +136,123 @@ def storage(
     typer.echo(f"deployable:   {profile.deployable}")
     for issue in issues:
         typer.secho(f"  issue: {issue}", fg=typer.colors.YELLOW)
+
+
+def _reference_context(
+    config: Path, model_id: str | None, seed: int = 0
+) -> tuple[ModelArchitecture, nn.Module, TokenDataset, TokenDataset]:
+    """Build a synthetic reference model + datasets for M2 commands."""
+    from adaptive.nets import ReferenceTransformer
+    from adaptive.quality import DatasetSplit, make_synthetic_dataset
+
+    arch = ModelAnalyzer().analyze_file(config, model_id=model_id)
+    model = ReferenceTransformer.from_architecture(arch, seed=seed)
+    calibration = make_synthetic_dataset(
+        "calibration",
+        DatasetSplit.calibration,
+        vocab_size=arch.vocab_size,
+        num_sequences=4,
+        seq_len=16,
+        seed=seed + 1,
+    )
+    evaluation = make_synthetic_dataset(
+        "evaluation",
+        DatasetSplit.evaluation,
+        vocab_size=arch.vocab_size,
+        num_sequences=3,
+        seq_len=16,
+        seed=seed + 2,
+    )
+    return arch, model, calibration, evaluation
+
+
+@app.command()
+def sensitivity(
+    config: Path = typer.Argument(..., exists=True, readable=True),
+    bits: int = typer.Option(4, "--bits"),
+    group_size: int = typer.Option(16, "--group-size"),
+    top_k: int = typer.Option(5, "--top-k"),
+    model_id: str | None = typer.Option(None, "--model-id"),
+) -> None:
+    """Rank layer sensitivity for a synthetic reference model (no weights downloaded)."""
+    configure_logging()
+    try:
+        from adaptive.sensitivity import SensitivityMethod, analyze_sensitivity
+
+        arch, model, calibration, _ = _reference_context(config, model_id)
+        report = analyze_sensitivity(
+            arch,
+            model,
+            calibration.sequences,
+            methods=(
+                SensitivityMethod.weight_error,
+                SensitivityMethod.activation_weighted,
+                SensitivityMethod.output_divergence,
+            ),
+            bits=bits,
+            group_size=group_size,
+            calibration_fingerprint=calibration.fingerprint(),
+        )
+    except AdaptiveError as exc:
+        typer.secho(f"error: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+
+    for method in report.methods:
+        typer.echo(f"[{method.value}]")
+        for rank, name in enumerate(report.top_k(method, top_k), start=1):
+            typer.echo(f"  {rank}. {name}  score={report.score(name, method):.3f}")
+
+
+@app.command()
+def optimize(
+    config: Path = typer.Argument(..., exists=True, readable=True),
+    tolerance: float = typer.Option(0.05, "--tolerance"),
+    group_size: int = typer.Option(16, "--group-size"),
+    algorithm: str = typer.Option("greedy", "--algorithm"),
+    model_id: str | None = typer.Option(None, "--model-id"),
+) -> None:
+    """Optimize precision under a quality tolerance using a synthetic reference model."""
+    configure_logging()
+    try:
+        from adaptive.models.optimization import OptimizationConstraints
+        from adaptive.optimizer import optimize as run_optimize
+        from adaptive.sensitivity import analyze_sensitivity
+
+        arch, model, calibration, evaluation = _reference_context(config, model_id)
+        report = analyze_sensitivity(
+            arch,
+            model,
+            calibration.sequences,
+            bits=4,
+            group_size=group_size,
+            calibration_fingerprint=calibration.fingerprint(),
+        )
+        constraints = OptimizationConstraints(
+            quality_tolerance=tolerance, allowed_bits=(4, 8, 16)
+        )
+        result = run_optimize(
+            arch,
+            report,
+            constraints,
+            baseline_metric_value=1.0,
+            group_size=group_size,
+            algorithm=algorithm,
+        )
+    except AdaptiveError as exc:
+        typer.secho(f"error: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+
+    selected = result.selected()
+    typer.echo(f"algorithm:  {result.algorithm}")
+    typer.echo(f"candidates: {len(result.candidates)}")
+    typer.echo(f"pareto:     {', '.join(result.pareto_frontier)}")
+    if selected is not None:
+        typer.echo(f"selected:   {selected.profile.name} ({selected.profile.profile_id})")
+        typer.echo(f"  size:     {selected.storage.total_mb:.1f} MB")
+        typer.echo(f"  cost:     {selected.cost.lower_cost:.6f}")
+        typer.echo(f"  feasible: {selected.feasible}")
+        for violation in selected.violations:
+            typer.secho(f"  violation: {violation}", fg=typer.colors.YELLOW)
 
 
 if __name__ == "__main__":  # pragma: no cover

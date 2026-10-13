@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.quality-report.v1",
+  "title": "Tesseract Adaptive Quality Report",
+  "description": "Measured quality of one precision profile against a baseline.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "model_id",
+    "structural_fingerprint",
+    "profile_id",
+    "manifest",
+    "metrics",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.quality-report.v1" },
+    "model_id": { "type": "string" },
+    "structural_fingerprint": { "type": "string" },
+    "profile_id": { "type": "string" },
+    "manifest": {
+      "type": "object",
+      "required": [
+        "model_id",
+        "calibration_dataset",
+        "evaluation_dataset",
+        "calibration_fingerprint",
+        "evaluation_fingerprint"
+      ],
+      "properties": {
+        "model_id": { "type": "string" },
+        "model_revision": { "type": ["string", "null"] },
+        "tokenizer": { "type": "string" },
+        "calibration_dataset": { "type": "string" },
+        "evaluation_dataset": { "type": "string" },
+        "calibration_fingerprint": { "type": "string" },
+        "evaluation_fingerprint": { "type": "string" },
+        "seed": { "type": "integer" },
+        "code_version": { "type": "string" },
+        "settings": { "type": "object" }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["metric", "value"],
+        "properties": {
+          "metric": {
+            "enum": [
+              "perplexity",
+              "calibration_reconstruction",
+              "output_divergence",
+              "task_accuracy",
+              "long_context",
+              "structured_output"
+            ]
+          },
+          "value": { "type": "number" },
+          "num_samples": { "type": "integer" },
+          "baseline_value": { "type": ["number", "null"] },
+          "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] }
+        }
+      }
+    },
+    "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

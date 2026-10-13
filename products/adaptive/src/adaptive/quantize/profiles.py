@@ -161,6 +161,28 @@ def baseline_profile(
     )
 
 
+def config_for_bits(
+    bits: int,
+    *,
+    scheme: QuantScheme = QuantScheme.symmetric,
+    granularity: Granularity = Granularity.per_group,
+    group_size: int | None = 128,
+    method: QuantMethod = QuantMethod.reference,
+    dtype: DType = DType.fp16,
+) -> QuantConfig:
+    """Build a config for 4/8-bit (integer) or 16-bit (floating point)."""
+    if bits >= 16:
+        return baseline_config(dtype)
+    effective_group_size = group_size if granularity is Granularity.per_group else None
+    return int_config(
+        bits,
+        scheme=scheme,
+        granularity=granularity,
+        group_size=effective_group_size,
+        method=method,
+    )
+
+
 def uniform_profile(
     architecture: ModelArchitecture,
     bits: int,
@@ -171,22 +193,24 @@ def uniform_profile(
     granularity: Granularity = Granularity.per_group,
     group_size: int | None = 128,
 ) -> PrecisionProfile:
-    """Uniform integer profile applied to every quantizable layer."""
-    effective_group_size = group_size if granularity is Granularity.per_group else None
-    config = int_config(
+    """Uniform profile (4/8-bit integer or 16-bit float) on every quantizable layer."""
+    config = config_for_bits(
         bits,
         scheme=scheme,
         granularity=granularity,
-        group_size=effective_group_size,
+        group_size=group_size,
         method=method,
+        dtype=architecture.baseline_dtype,
     )
     cap = capability(runtime)
-    supported = cap.supports_bits(bits, is_float=False) and method in cap.methods
-    deployable = supported and cap.production
+    supported = cap.supports_bits(bits, is_float=config.is_float) and (
+        config.is_float or method in cap.methods
+    )
+    deployable = supported if config.is_float else (supported and cap.production)
     notes: list[str] = []
     if not supported:
-        notes.append(f"{runtime.value} does not declare {bits}-bit {method.value} support")
-    elif not cap.production:
+        notes.append(f"{runtime.value} does not declare {bits}-bit support")
+    elif not config.is_float and not cap.production:
         notes.append("reference backend; not a production kernel")
     return PrecisionProfile(
         profile_id=_profile_id(
@@ -201,7 +225,7 @@ def uniform_profile(
             },
         ),
         name=f"uniform-{bits}bit-{granularity.value}",
-        description=f"Uniform {bits}-bit {scheme.value} {granularity.value} quantization",
+        description=f"Uniform {bits}-bit {scheme.value} {granularity.value} precision",
         default_config=config,
         assignments={},
         runtime=runtime,
@@ -240,23 +264,25 @@ def mixed_profile(
             raise UnsupportedQuantizationError(f"layer {layer_name!r} is not quantizable")
 
     effective_group_size = group_size if granularity is Granularity.per_group else None
-    default_config = int_config(
+    default_config = config_for_bits(
         default_bits,
         scheme=scheme,
         granularity=granularity,
         group_size=effective_group_size,
         method=method,
+        dtype=architecture.baseline_dtype,
     )
     assignments: dict[str, QuantConfig] = {}
     for layer_name, bits in layer_bits.items():
         if bits == default_bits:
             continue
-        assignments[layer_name] = int_config(
+        assignments[layer_name] = config_for_bits(
             bits,
             scheme=scheme,
             granularity=granularity,
             group_size=effective_group_size,
             method=method,
+            dtype=architecture.baseline_dtype,
         )
     profile = PrecisionProfile(
         profile_id=_profile_id(
