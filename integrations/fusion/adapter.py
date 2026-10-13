@@ -57,12 +57,17 @@ def _dec(value: Any) -> float:
 def map_recommendation(
     recommendation: Mapping[str, Any],
     *,
-    require_execution_eligible: bool = True,
+    require_execution_eligible: bool = False,
 ) -> PlacementResult:
     """Map a Fusion recommendation document into a :class:`PlacementResult`.
 
-    Raises :class:`IntegrationError` when Fusion reports no executable plan, so
-    the coordinator fails the operation instead of reserving phantom capacity.
+    Fusion is advisory by default (``execution_eligibility=False``,
+    ``approval_status=advisory_only``); the platform is the execution authority,
+    so advisory plans are accepted. Set ``require_execution_eligible=True`` to
+    require Fusion to mark the plan executable instead.
+
+    Raises :class:`IntegrationError` when Fusion reports no plan at all, so the
+    coordinator fails the operation instead of reserving phantom capacity.
     """
     plan = recommendation.get("recommended_plan") or []
     if not plan:

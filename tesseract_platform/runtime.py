@@ -18,7 +18,7 @@ from tesseract_platform.config import Settings, get_settings
 from tesseract_platform.coordinator import Reconciler, WorkloadCoordinator
 from tesseract_platform.observability import OptimizationController, TelemetryCollector
 from tesseract_platform.policies import PlatformPolicy
-from tesseract_platform.state import StateStore
+from tesseract_platform.state import CapacityLedger, StateStore
 
 
 @dataclass
@@ -75,6 +75,11 @@ def build_platform(
     )
     telemetry = TelemetryCollector(store)
     precision = precision_provider if precision_provider is not None else build_adaptive_provider(settings)
+    capacity_ledger = (
+        CapacityLedger(settings.total_usable_capacity)
+        if settings.total_usable_capacity > 0
+        else None
+    )
 
     coordinator = WorkloadCoordinator(
         store=store,
@@ -90,6 +95,7 @@ def build_platform(
         else _default_deployment_provider(settings),
         precision_provider=precision,
         telemetry=telemetry,
+        capacity_ledger=capacity_ledger,
     )
     controller = OptimizationController(
         store,

@@ -1,0 +1,113 @@
+{
+  "phase": "C",
+  "generated_at": "2026-10-13T10:05:20.081810+00:00",
+  "model": "models",
+  "sensitivity_layers": 196,
+  "C1_quality_rejection": {
+    "selected_profile": null,
+    "selected_bits_is_4": false,
+    "selected_feasible": null,
+    "notes": [
+      "no feasible profile found; recommending baseline precision"
+    ]
+  },
+  "C2_fallback_ladder": [
+    {
+      "tolerance": 0.0,
+      "selected": "greedy"
+    },
+    {
+      "tolerance": 0.01,
+      "selected": "greedy"
+    },
+    {
+      "tolerance": 0.05,
+      "selected": "uniform-4bit-per_group"
+    },
+    {
+      "tolerance": 0.1,
+      "selected": "uniform-4bit-per_group"
+    },
+    {
+      "tolerance": 0.5,
+      "selected": "uniform-4bit-per_group"
+    }
+  ],
+  "C3_infeasible": {
+    "selected_profile": "uniform-16bit-per_group",
+    "selected_feasible": false,
+    "violations": [
+      "memory 1.192 GB > 0.0001 GB"
+    ],
+    "notes": [
+      "no feasible profile found; recommending baseline precision"
+    ],
+    "no_feasible_note": true
+  },
+  "C4_artifact_availability": {
+    "reference_int4_deployable": false,
+    "vllm_awq_int4_deployable": true,
+    "reference_notes": [
+      "reference backend; not a production kernel"
+    ],
+    "vllm_notes": [],
+    "evidence": "estimated"
+  },
+  "C5_hardware_compat": {
+    "mps_supports_int4": false,
+    "mps_supported_bits": [
+      16,
+      32
+    ],
+    "cuda_supported_bits": [
+      4,
+      8,
+      16,
+      32
+    ],
+    "validate_int4_on_mps": [
+      "mps does not declare 4-bit integer support",
+      "mps does not support method reference"
+    ],
+    "assert_profile_supported_raises": true,
+    "cuda_production": true
+  },
+  "C6_evidence_labelling": {
+    "quality_estimator_evidence": "estimated",
+    "selected_cost_evidence": "estimated",
+    "selected_profile_evidence": "estimated",
+    "predicted_degradation_is_estimate": true
+  },
+  "C8_optimizer_vs_heuristic": {
+    "uniform4": {
+      "degradation": 0.04508634068799176,
+      "mb": 447.125664
+    },
+    "uniform8": {
+      "degradation": 0.00541036088255901,
+      "mb": 745.117856
+    },
+    "uniform16": {
+      "degradation": 0.0,
+      "mb": 1192.09984
+    },
+    "selected": {
+      "name": "uniform-4bit-per_group",
+      "degradation": 0.04508634068799176,
+      "mb": 447.125664
+    },
+    "protect_mlp_heuristic": {
+      "degradation": 0.027828583995442507,
+      "mb": 448.874656
+    },
+    "note": "protect-MLP heuristic is a baseline; compare degradation at matched storage"
+  },
+  "C7_transitions": {
+    "covered_by": "adaptive controller tests + platform AdaptivePrecisionProvider protocol",
+    "adaptive_test_suite": "254 passed, 2 skipped (validation/mac-m5-audit)"
+  },
+  "C9_safe_default": {
+    "covered_by": "platform tests/integration/test_adaptive_optional.py",
+    "behaviour": "platform deploys declared precision when Adaptive is absent"
+  }
+}

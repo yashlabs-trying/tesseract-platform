@@ -1,0 +1,38 @@
+.....ssss.................................                               [100%]
+=============================== warnings summary ===============================
+src/foundry/models/__init__.py:74
+  /home/yashs/tesseract-foundry/src/foundry/models/__init__.py:74: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.14/migration/
+    class ModelSpec(BaseModel):
+
+tests/integration/test_scenarios.py::TestScenario1SingleGPU::test_complete_workflow
+tests/integration/test_scenarios.py::TestScenario3BurstyNegative::test_no_feasible_with_high_margin
+tests/integration/test_scenarios.py::TestScenario3BurstyNegative::test_no_feasible_with_high_margin
+tests/integration/test_scenarios.py::TestScenario3BurstyNegative::test_no_feasible_with_high_margin
+tests/integration/test_scenarios.py::TestScenario3BurstyNegative::test_no_feasible_with_high_margin
+tests/unit/test_models.py::TestReports::test_markdown_report_no_feasible
+tests/unit/test_models.py::TestReports::test_markdown_report_normal
+tests/unit/test_models.py::TestJobs::test_create_job
+  /home/yashs/.venvs/foundry/lib/python3.12/site-packages/pydantic/main.py:280: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+tests/integration/test_scenarios.py::TestScenario1SingleGPU::test_complete_workflow
+  /home/yashs/tesseract-foundry/src/foundry/qualification/__init__.py:178: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    created_at=datetime.utcnow(),
+
+tests/integration/test_scenarios.py::TestScenario1SingleGPU::test_complete_workflow
+tests/unit/test_models.py::TestReports::test_markdown_report_no_feasible
+tests/unit/test_models.py::TestReports::test_markdown_report_normal
+  /home/yashs/tesseract-foundry/src/foundry/reports/__init__.py:24: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    lines.append("Generated:      " + datetime.utcnow().isoformat())
+
+tests/integration/test_scenarios.py::TestScenario3BurstyNegative::test_no_feasible_with_high_margin
+tests/unit/test_models.py::TestQualification::test_recommend_no_feasible
+  /home/yashs/tesseract-foundry/src/foundry/qualification/__init__.py:186: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    created_at=datetime.utcnow(),
+
+tests/unit/test_models.py::TestJobs::test_create_job
+  /home/yashs/tesseract-foundry/src/foundry/config/__init__.py:4: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.14/migration/
+    class Settings(BaseSettings):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+38 passed, 4 skipped, 16 warnings in 0.49s

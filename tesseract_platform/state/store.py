@@ -248,7 +248,7 @@ class StateStore:
         placeholders = ",".join("?" for _ in states)
         with self._lock:
             rows = self._conn.execute(
-                f"SELECT payload FROM reservations WHERE state IN ({placeholders})",
+                f"SELECT payload FROM reservations WHERE state IN ({placeholders})",  # nosec B608 - placeholders are '?' markers, not user data
                 tuple(states),
             ).fetchall()
         return [Reservation.model_validate_json(r["payload"]) for r in rows]
@@ -288,7 +288,7 @@ class StateStore:
         placeholders = ",".join("?" for _ in states)
         with self._lock:
             rows = self._conn.execute(
-                f"SELECT payload FROM deployments WHERE state IN ({placeholders})",
+                f"SELECT payload FROM deployments WHERE state IN ({placeholders})",  # nosec B608 - placeholders are '?' markers, not user data
                 tuple(states),
             ).fetchall()
         return [DeploymentRecord.model_validate_json(r["payload"]) for r in rows]

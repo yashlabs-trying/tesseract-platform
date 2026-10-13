@@ -60,6 +60,7 @@ class WorkloadCoordinator:
         deployment_provider=None,
         precision_provider=None,
         telemetry=None,
+        capacity_ledger=None,
         readiness_timeout_seconds: Optional[int] = None,
     ) -> None:
         self.store = store
@@ -69,6 +70,7 @@ class WorkloadCoordinator:
         self.deployment_provider = deployment_provider
         self.precision_provider = precision_provider
         self.telemetry = telemetry
+        self.capacity_ledger = capacity_ledger
         self.readiness_timeout_seconds = (
             readiness_timeout_seconds or policy.readiness_timeout_seconds
         )
@@ -194,6 +196,11 @@ class WorkloadCoordinator:
         if self.placement_provider is None:
             raise CoordinatorError("no placement provider configured")
         result = self.placement_provider.reserve(op.request, profile, precision)
+        if self.capacity_ledger is not None:
+            # Enforce committed + active_reserved <= total_usable_capacity.
+            self.capacity_ledger.reserve(
+                op.operation_id, result.capacity.gpu_count if result.capacity else 0
+            )
         reservation = Reservation(
             reservation_id=result.reservation_id or str(uuid.uuid4()),
             operation_id=op.operation_id,
@@ -215,6 +222,8 @@ class WorkloadCoordinator:
         self._record_transition(
             "reservation", reservation.reservation_id, op, "RESERVING", "RESERVED"
         )
+        if self.capacity_ledger is not None:
+            self.capacity_ledger.commit(op.operation_id)
         op.reservation_id = reservation.reservation_id
         self._set_operation_state(op, OperationState.RESERVED, "capacity reserved")
         return reservation
@@ -269,7 +278,7 @@ class WorkloadCoordinator:
         self._record_transition(
             "deployment", deployment.deployment_id, op, "DEPLOYING", "READY"
         )
-        reservation = self.store.get_reservation(op.reservation_id)
+        reservation = self.store.get_reservation(op.reservation_id) if op.reservation_id else None
         if reservation is not None:
             reservation.state = ReservationState.READY
             reservation.revision = 3
@@ -344,6 +353,8 @@ class WorkloadCoordinator:
                 )
         elif step.component == "fusion" and op.reservation_id:
             self.placement_provider.release(op.reservation_id)
+            if self.capacity_ledger is not None:
+                self.capacity_ledger.release(op.operation_id)
             reservation = self.store.get_reservation(op.reservation_id)
             if reservation is not None and reservation.state != ReservationState.RELEASED:
                 prev = reservation.state.value

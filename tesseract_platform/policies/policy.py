@@ -93,5 +93,8 @@ class PlatformPolicy:
             concurrency=request.workload.concurrency,
             evidence=Evidence.estimated,
             source_type="conservative_default",
-            **CONSERVATIVE_DEFAULTS,
+            ttft_p95_ms=CONSERVATIVE_DEFAULTS["ttft_p95_ms"],
+            itl_p95_ms=CONSERVATIVE_DEFAULTS["itl_p95_ms"],
+            completed_requests_per_second=CONSERVATIVE_DEFAULTS["completed_requests_per_second"],
+            output_tokens_per_second=CONSERVATIVE_DEFAULTS["output_tokens_per_second"],
         )

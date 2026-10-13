@@ -1,0 +1,189 @@
+.............................................................ss.ssss.... [ 38%]
+........................................................................ [ 76%]
+.............................................                            [100%]
+=============================== warnings summary ===============================
+../.venvs/fusion/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/yashs/.venvs/fusion/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/audit/test_baseline_competition.py: 187 warnings
+tests/audit/test_boundary_cases.py: 66 warnings
+tests/audit/test_concurrency_races.py: 438 warnings
+tests/audit/test_endurance.py: 23572 warnings
+tests/audit/test_fault_injection.py: 54 warnings
+tests/audit/test_fleet_simulation.py: 1334 warnings
+tests/audit/test_k8s_integration.py: 5 warnings
+tests/audit/test_optimizer_engine.py: 17 warnings
+tests/audit/test_optimizer_oracle.py: 42 warnings
+tests/audit/test_rl_readiness.py: 12 warnings
+tests/audit/test_security.py: 17 warnings
+tests/audit/test_slo_validation.py: 97 warnings
+tests/audit/test_stability.py: 139 warnings
+tests/contract/test_api_contract.py: 11 warnings
+tests/integration/test_simulator_integration.py: 28 warnings
+tests/simulator/test_scenarios.py: 350 warnings
+tests/unit/test_demand.py: 2 warnings
+tests/unit/test_economics.py: 4 warnings
+tests/unit/test_inventory.py: 4 warnings
+tests/unit/test_models.py: 9 warnings
+tests/unit/test_optimizer.py: 43 warnings
+  /home/yashs/.venvs/fusion/lib/python3.12/site-packages/pydantic/main.py:280: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+tests/audit/test_endurance.py: 20 warnings
+tests/audit/test_fleet_simulation.py: 67 warnings
+tests/audit/test_slo_validation.py: 9 warnings
+tests/audit/test_stability.py: 1 warning
+tests/contract/test_api_contract.py: 2 warnings
+tests/integration/test_simulator_integration.py: 7 warnings
+tests/simulator/test_scenarios.py: 9 warnings
+  /home/yashs/tesseract-fusion/src/fusion/simulator/engine.py:29: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    simulation_id=f"sim-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{self._seed}",
+
+tests/audit/test_endurance.py: 20 warnings
+tests/audit/test_fleet_simulation.py: 67 warnings
+tests/audit/test_slo_validation.py: 9 warnings
+tests/audit/test_stability.py: 1 warning
+tests/contract/test_api_contract.py: 2 warnings
+tests/integration/test_simulator_integration.py: 7 warnings
+tests/simulator/test_scenarios.py: 9 warnings
+  /home/yashs/tesseract-fusion/src/fusion/simulator/engine.py:35: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    result.started_at = datetime.utcnow()
+
+tests/audit/test_endurance.py: 20 warnings
+tests/audit/test_fleet_simulation.py: 67 warnings
+tests/audit/test_slo_validation.py: 9 warnings
+tests/audit/test_stability.py: 1 warning
+tests/contract/test_api_contract.py: 2 warnings
+tests/integration/test_simulator_integration.py: 7 warnings
+tests/simulator/test_scenarios.py: 9 warnings
+  /home/yashs/tesseract-fusion/src/fusion/simulator/engine.py:42: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow(),
+
+tests/audit/test_endurance.py: 20 warnings
+tests/audit/test_fleet_simulation.py: 67 warnings
+tests/audit/test_slo_validation.py: 9 warnings
+tests/audit/test_stability.py: 1 warning
+tests/contract/test_api_contract.py: 2 warnings
+tests/integration/test_simulator_integration.py: 7 warnings
+tests/simulator/test_scenarios.py: 9 warnings
+  /home/yashs/tesseract-fusion/src/fusion/simulator/engine.py:102: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    result.completed_at = datetime.utcnow()
+
+tests/audit/test_endurance.py: 20 warnings
+tests/audit/test_fleet_simulation.py: 67 warnings
+tests/audit/test_slo_validation.py: 9 warnings
+tests/audit/test_stability.py: 1 warning
+tests/contract/test_api_contract.py: 2 warnings
+tests/integration/test_simulator_integration.py: 7 warnings
+tests/simulator/test_scenarios.py: 9 warnings
+  /home/yashs/tesseract-fusion/src/fusion/simulator/engine.py:105: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow(),
+
+tests/audit/test_fleet_simulation.py::test_replay_determinism
+tests/audit/test_fleet_simulation.py::test_replay_determinism
+  /home/yashs/tesseract-fusion/src/fusion/optimizer/historical_replay.py:35: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    result.started_at = datetime.utcnow()
+
+tests/audit/test_fleet_simulation.py::test_replay_determinism
+tests/audit/test_fleet_simulation.py::test_replay_determinism
+  /home/yashs/tesseract-fusion/src/fusion/optimizer/historical_replay.py:56: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    result.completed_at = datetime.utcnow()
+
+tests/audit/test_fleet_simulation.py::test_replay_determinism
+tests/audit/test_fleet_simulation.py::test_replay_determinism
+  /home/yashs/tesseract-fusion/src/fusion/optimizer/historical_replay.py:59: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/audit/test_security.py: 5 warnings
+tests/contract/test_api_contract.py: 13 warnings
+  /home/yashs/tesseract-fusion/src/fusion/api/app.py:61: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+tests/audit/test_security.py: 5 warnings
+tests/contract/test_api_contract.py: 13 warnings
+  /home/yashs/.venvs/fusion/lib/python3.12/site-packages/fastapi/applications.py:4745: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+tests/audit/test_security.py: 5001 warnings
+tests/contract/test_api_contract.py: 1 warning
+tests/unit/test_inventory.py: 7 warnings
+  /home/yashs/tesseract-fusion/src/fusion/inventory/fixture_adapter.py:64: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    observed_at=datetime.fromisoformat(entry["observed_at"]) if "observed_at" in entry else datetime.utcnow(),
+
+tests/audit/test_security.py: 5001 warnings
+tests/contract/test_api_contract.py: 1 warning
+tests/unit/test_inventory.py: 7 warnings
+  /home/yashs/tesseract-fusion/src/fusion/inventory/fixture_adapter.py:65: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    refresh_timestamp=datetime.utcnow(),
+
+tests/audit/test_security.py::test_api_input_size_handling
+tests/contract/test_api_contract.py::TestHealthEndpoints::test_healthz
+  /home/yashs/tesseract-fusion/src/fusion/api/app.py:67: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return {"status": "ok", "timestamp": datetime.utcnow().isoformat()}
+
+tests/audit/test_stability.py::test_no_oscillation_small_changes
+  /home/yashs/tesseract-fusion/tests/audit/test_stability.py:85: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    optimizer._last_decisions["d1"] = (8, datetime.utcnow())
+
+tests/audit/test_stability.py: 27 warnings
+tests/contract/test_api_contract.py: 1 warning
+tests/unit/test_demand.py: 1 warning
+  /home/yashs/tesseract-fusion/src/fusion/demand/forecaster.py:37: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow()
+
+tests/audit/test_stability.py: 210 warnings
+  /home/yashs/tesseract-fusion/src/fusion/optimizer/demand_aware.py:83: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    if (datetime.utcnow() - last_time) < self._min_decision_interval:
+
+tests/audit/test_stability.py: 21 warnings
+  /home/yashs/tesseract-fusion/src/fusion/optimizer/demand_aware.py:112: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    datetime.utcnow(),
+
+tests/audit/test_stability.py::test_min_decision_interval
+  /home/yashs/tesseract-fusion/tests/audit/test_stability.py:239: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    optimizer._last_decisions["d1"] = (8, datetime.utcnow())
+
+tests/audit/test_stability.py::test_min_decision_interval
+  /home/yashs/tesseract-fusion/tests/audit/test_stability.py:245: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    optimizer._last_decisions["d1"] = (8, datetime.utcnow() - timedelta(minutes=20))
+
+tests/contract/test_adapters.py::TestDynamoAdapterContract::test_normalize_metrics
+  /home/yashs/tesseract-fusion/src/fusion/adapters/dynamo.py:23: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": entry.get("timestamp", datetime.utcnow().isoformat()),
+
+tests/contract/test_api_contract.py::TestInventoryAPI::test_get_inventory
+tests/contract/test_api_contract.py::TestInventoryAPI::test_get_capacity
+tests/contract/test_api_contract.py::TestOptimizationAPI::test_optimization_endpoint
+tests/contract/test_api_contract.py::TestOptimizationAPI::test_get_recommendation
+tests/unit/test_inventory.py::TestInventoryService::test_caching
+tests/unit/test_inventory.py::TestInventoryService::test_caching
+tests/unit/test_inventory.py::TestInventoryService::test_get_available_gpus
+tests/unit/test_inventory.py::TestInventoryService::test_get_by_model
+  /home/yashs/tesseract-fusion/src/fusion/inventory/provider.py:31: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow()
+
+tests/contract/test_api_contract.py::TestForecastAPI::test_forecast
+  /home/yashs/tesseract-fusion/tests/contract/test_api_contract.py:117: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    {"deployment_id": "d1", "requests_per_second": 10.0, "measured_at": datetime.utcnow().isoformat()},
+
+tests/contract/test_api_contract.py::TestForecastAPI::test_forecast
+  /home/yashs/tesseract-fusion/tests/contract/test_api_contract.py:118: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    {"deployment_id": "d1", "requests_per_second": 12.0, "measured_at": datetime.utcnow().isoformat()},
+
+tests/contract/test_api_contract.py::TestForecastAPI::test_forecast
+  /home/yashs/tesseract-fusion/tests/contract/test_api_contract.py:119: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    {"deployment_id": "d1", "requests_per_second": 8.0, "measured_at": datetime.utcnow().isoformat()},
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+183 passed, 6 skipped, 37344 warnings in 46.24s
