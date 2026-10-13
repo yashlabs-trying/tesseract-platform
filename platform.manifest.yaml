@@ -42,7 +42,7 @@ products:
     # Local validated revision, 3 commits ahead of origin/main.
     pinned_commit: df227307a916a1ec3d3fadab9a28cb2cdb14e911
     upstream_main_commit: cae22248f0fd3a9f9078af13aa4208950743e602
-    validated_commit: a8006f77972cb90fa93cc50424db2de0c900bf27
+    validated_commit: 83742826aa652143aca0fe73cec55156851d212a
     fix_branch: fix/code-issues
     fix_pr: https://github.com/yashlabs-trying/kubbernetd-saver/pull/1
     python_package: kubbernetd
@@ -50,9 +50,9 @@ products:
     crd: replicagroups.kubbernetd.io
     push_status: >-
       origin/main is a protected branch requiring the "k8s-e2e" status check.
-      The validated commits are on origin/fix/code-issues (PR #1). The k8s-e2e
-      job failed on a CI install bug (kind written to /usr/local/bin without
-      sudo); fixed in a8006f7.
+      The validated commits are on origin/fix/code-issues (PR #1), which now
+      passes unit-tests and k8s-e2e (all 9 E2E scenarios). PR is CLEAN and
+      MERGEABLE, awaiting authorization.
     historical_test_claim: "91/91 unit, 15/15 k8s lifecycle, 100/100 cold requests (not yet reproduced)"
 
 future_products:
