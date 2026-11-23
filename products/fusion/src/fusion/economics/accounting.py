@@ -6,6 +6,7 @@ from fusion.models.types import (
     GPUInventory, ServiceEconomics, DeploymentAlternative,
     BillingModel, Currency, ExpectedOutcome,
 )
+from fusion._time import utcnow_naive
 
 
 class CostAccountingEngine:
@@ -27,8 +28,8 @@ class CostAccountingEngine:
             allocated_cost=total_gpu_cost,
             avoidable_cost=total_gpu_cost,
             cost_source="computed",
-            time_window_start=datetime.utcnow(),
-            time_window_end=datetime.utcnow() + timedelta(hours=hours),
+            time_window_start=utcnow_naive(),
+            time_window_end=utcnow_naive() + timedelta(hours=hours),
             assumptions=[f"GPU cost for {len(gpus)} GPUs over {hours}h"],
         )
 

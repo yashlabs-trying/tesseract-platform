@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from typing import List, Optional, Tuple
 import statistics
 from fusion.models.types import WorkloadDemand, ForecastResult
+from fusion._time import utcnow_naive
 
 
 class DemandForecaster:
@@ -34,7 +35,7 @@ class DemandForecaster:
         burst_prob = (peak - avg) / avg if avg > 0 else 0.0
         burst_prob = min(max(burst_prob, 0.0), 1.0)
 
-        now = datetime.utcnow()
+        now = utcnow_naive()
         time_points = [now + i * interval for i in range(n_points)]
 
         # Forecast with decreasing confidence further out

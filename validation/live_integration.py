@@ -27,7 +27,7 @@ from pathlib import Path
 import httpx
 import yaml
 
-REPO = Path("/home/user/tesseract-platform")
+REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
 from integrations.fusion import FusionAdapter  # noqa: E402
@@ -40,7 +40,7 @@ from tesseract_platform.runtime import build_platform  # noqa: E402
 
 FOUNDRY_URL = "http://127.0.0.1:8001"
 FUSION_URL = "http://127.0.0.1:8002"
-FOUNDRY_FIXTURE = Path("/home/user/tesseract-foundry/fixtures/scenario-1-single-gpu.yaml")
+FOUNDRY_FIXTURE = Path(__file__).resolve().parents[1] / "products/foundry/fixtures/scenario-1-single-gpu.yaml"
 
 evidence: dict = {"phase": "B", "generated_at": datetime.now(timezone.utc).isoformat()}
 

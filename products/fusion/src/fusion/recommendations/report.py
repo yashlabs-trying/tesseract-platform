@@ -6,12 +6,13 @@ from fusion.models.types import (
     FusionRecommendation, DeploymentAlternative, ExpectedOutcome,
     RecommendationStatus, GPUInventory, ModelDeployment, TenantPolicy,
 )
+from fusion._time import utcnow_naive
 
 
 class RecommendationReport:
     def __init__(self, recommendation: FusionRecommendation):
         self._rec = recommendation
-        self._generated_at = datetime.utcnow()
+        self._generated_at = utcnow_naive()
 
     def to_markdown(self) -> str:
         lines = []

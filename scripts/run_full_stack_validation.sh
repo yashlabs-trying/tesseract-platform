@@ -64,14 +64,14 @@ HAVE_KUBECTL=0; command -v kubectl >/dev/null 2>&1 && HAVE_KUBECTL=1
 # 2. Pinned commits
 echo "==> 2. Pinned source commits"
 python3 - <<'PY'
-import sys, yaml, subprocess
+import os, sys, yaml, subprocess
 from pathlib import Path
 manifest = yaml.safe_load(Path("platform.manifest.yaml").read_text())
 ok = True
 for name, info in (manifest.get("products") or {}).items():
-    path = Path(f"/home/user/{name if name!='ignite' else 'kubbernetd-saver'}")
-    if not path.exists():
-        path = Path(f"/home/user/tesseract-{name}")
+    if name != "ignite":
+        print(f"  {name}: in-tree at {info.get('path')}"); continue
+    path = Path(os.environ.get("KUBBERNETD_DIR", "../kubbernetd-saver"))
     if not path.exists():
         print(f"  {name}: checkout missing (skipped)"); continue
     head = subprocess.check_output(["git","-C",str(path),"rev-parse","HEAD"], text=True).strip()
@@ -87,8 +87,8 @@ mkdir -p "$VDIR"
 if [ ! -x "$VDIR/validation/bin/python" ]; then
   uv venv --python 3.12 "$VDIR/validation" >/dev/null 2>&1
   uv pip install --python "$VDIR/validation/bin/python" \
-    -e "$ROOT" -e /home/user/tesseract-foundry -e /home/user/tesseract-fusion \
-    -e /home/user/tesseract-adaptive httpx pyyaml pytest >/dev/null 2>&1
+    -e "$ROOT" -e "$ROOT/products/foundry" -e "$ROOT/products/fusion" \
+    -e "$ROOT/products/adaptive" httpx pyyaml pytest >/dev/null 2>&1
 fi
 VPY="$VDIR/validation/bin/python"
 echo "  validation venv: $VPY"
@@ -98,8 +98,8 @@ echo "==> 4. Product regression suites"
 if [ "$SKIP_PRODUCTS" = "0" ]; then
   for p in foundry:foundry fusion:fusion kubbernetd:kubbernetd; do
     name="${p%%:*}"; vname="${p##*:}"
-    prod="/home/user/tesseract-$name"
-    [ "$name" = "kubbernetd" ] && prod=/home/user/kubbernetd-saver
+    prod="$ROOT/products/$name"
+    [ "$name" = "kubbernetd" ] && prod="${KUBBERNETD_DIR:-$ROOT/../kubbernetd-saver}"
     if [ -x "$VDIR/$vname/bin/python" ]; then
       ( cd "$prod" && "$VDIR/$vname/bin/python" -m pytest tests -o addopts='' -q -p no:cacheprovider >"$RAW/${name}_pytest.log" 2>&1 )
       rc=$?
@@ -109,8 +109,8 @@ if [ "$SKIP_PRODUCTS" = "0" ]; then
       record "product:$name" "NOT TESTED" "venv missing"
     fi
   done
-  if [ -x /home/user/tesseract-adaptive/.venv/bin/python ]; then
-    ( cd /home/user/tesseract-adaptive && .venv/bin/python -m pytest tests -o addopts='' -q -p no:cacheprovider >"$RAW/adaptive_pytest.log" 2>&1 )
+  if [ -x $ROOT/products/adaptive/.venv/bin/python ]; then
+    ( cd $ROOT/products/adaptive && .venv/bin/python -m pytest tests -o addopts='' -q -p no:cacheprovider >"$RAW/adaptive_pytest.log" 2>&1 )
     rc=$?
     summary=$(grep -E 'passed|failed|error' "$RAW/adaptive_pytest.log" | tail -1)
     [ $rc -eq 0 ] && record "product:adaptive" PASS "$summary" || record "product:adaptive" FAIL "$summary"
@@ -155,8 +155,8 @@ if [ -f validation/live_integration.py ]; then
   "$VPY" validation/live_integration.py >/dev/null 2>&1 && record "live integration (Foundry/Fusion)" PASS "see reports/raw/live_integration.json" || record "live integration" FAIL "see log"
 fi
 "$VPY" validation/cpu_phases.py >/dev/null 2>&1 && record "concurrency/chaos/telemetry" PASS "see reports/raw/cpu_phases.json" || record "concurrency/chaos/telemetry" FAIL "see log"
-if [ -x /home/user/tesseract-adaptive/.venv/bin/python ]; then
-  /home/user/tesseract-adaptive/.venv/bin/python validation/adaptive_quality_safety.py >/dev/null 2>&1 \
+if [ -x $ROOT/products/adaptive/.venv/bin/python ]; then
+  $ROOT/products/adaptive/.venv/bin/python validation/adaptive_quality_safety.py >/dev/null 2>&1 \
     && record "adaptive quality safety" PASS "see reports/raw/adaptive_quality_safety.json" \
     || record "adaptive quality safety" FAIL "see log"
 fi

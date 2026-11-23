@@ -9,7 +9,7 @@ description = "Unified orchestration and optimization layer connecting Tesseract
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-authors = [{ name = "Yash Labs", email = "novalabs0.ai@gmail.com" }]
+authors = [{ name = "Yashvardhan Singh Shekhawat", email = "novalabs0.ai@gmail.com" }]
 keywords = ["tesseract", "orchestration", "gpu", "inference", "kubernetes"]
 dependencies = [
   "pydantic>=2.6",
@@ -42,6 +42,7 @@ markers = [
 ]
 
 [tool.ruff]
+extend-exclude = ["products"]
 line-length = 100
 target-version = "py311"
 

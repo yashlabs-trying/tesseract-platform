@@ -3,6 +3,7 @@ from typing import List, Optional, Tuple
 import statistics
 from datetime import datetime
 from fusion.models.types import WorkloadDemand
+from fusion._time import utcnow_naive
 
 
 class WorkloadProfileBuilder:
@@ -18,7 +19,7 @@ class WorkloadProfileBuilder:
             predicted_demand_rps=statistics.mean(rps_values[-10:]) if len(rps_values) >= 10 else statistics.mean(rps_values),
             time_window_seconds=len(rps_values) * 60,
             source="profile_builder",
-            measured_at=datetime.utcnow(),
+            measured_at=utcnow_naive(),
         )
 
     def compute_peak_to_average(self, rps_values: List[float]) -> float:

@@ -6,6 +6,7 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 from decimal import Decimal
 from fusion.models.types import GPUInventory, HealthStatus, IsolationMode, SharingPolicy, Currency
+from fusion._time import utcnow_naive
 
 
 class FixtureInventoryAdapter:
@@ -61,6 +62,6 @@ class FixtureInventoryAdapter:
             resource_cost_per_hour=Decimal(str(entry.get("resource_cost_per_hour", entry.get("cost_per_hour", 0)))),
             currency=Currency(entry.get("currency", "USD")),
             resource_cost_source=entry.get("resource_cost_source", "fixture"),
-            observed_at=datetime.fromisoformat(entry["observed_at"]) if "observed_at" in entry else datetime.utcnow(),
-            refresh_timestamp=datetime.utcnow(),
+            observed_at=datetime.fromisoformat(entry["observed_at"]) if "observed_at" in entry else utcnow_naive(),
+            refresh_timestamp=utcnow_naive(),
         )

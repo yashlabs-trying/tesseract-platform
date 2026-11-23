@@ -3,6 +3,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Dict, List, Optional, Any
 from fusion.models.types import GPUInventory, HealthStatus, IsolationMode, SharingPolicy
+from fusion._time import utcnow_naive
 
 
 class KubernetesInventoryAdapter:
@@ -50,7 +51,7 @@ class KubernetesInventoryAdapter:
                         health_status=self._parse_health(node),
                         resource_cost_per_hour=Decimal("0"),
                         resource_cost_source="kubernetes",
-                        observed_at=datetime.utcnow(),
+                        observed_at=utcnow_naive(),
                     ))
         except Exception as e:
             raise RuntimeError(f"Failed to list Kubernetes nodes: {e}")

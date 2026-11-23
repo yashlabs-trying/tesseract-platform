@@ -8,6 +8,7 @@ version = "1.0.0"
 description = "AI deployment intelligence for GPU infrastructure providers"
 readme = "README.md"
 license = { text = "MIT" }
+authors = [{ name = "Yashvardhan Singh Shekhawat", email = "novalabs0.ai@gmail.com" }]
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115.0",

@@ -38,6 +38,7 @@ from fusion.simulator.engine import FleetSimulator
 from fusion.simulator.scenario import ScenarioLoader
 
 from .fleet_scenarios import class_j_spike
+from fusion._time import utcnow_naive
 
 
 def _gpu(cost: str = "2.0", gpu_id: str = "gpu-0") -> GPUInventory:
@@ -82,7 +83,7 @@ def test_no_oscillation_small_changes():
     optimizer = DemandAwareOptimizer(
         {"hysteresis_threshold": 0.5, "min_decision_interval_minutes": 15}
     )
-    optimizer._last_decisions["d1"] = (8, datetime.utcnow())
+    optimizer._last_decisions["d1"] = (8, utcnow_naive())
 
     decisions = []
     for rps in (10.0, 10.5, 9.5, 10.2, 9.8):
@@ -236,13 +237,13 @@ def test_min_decision_interval():
     gpus = [_gpu("2.0")]
     policy = TenantPolicy(tenant_id="t1")
 
-    optimizer._last_decisions["d1"] = (8, datetime.utcnow())
+    optimizer._last_decisions["d1"] = (8, utcnow_naive())
     within, _, _ = optimizer.evaluate_with_demand(
         _deployment(10), gpus, policy, None, _demand(10.0)[0], _demand(10.0)
     )
     assert within is None
 
-    optimizer._last_decisions["d1"] = (8, datetime.utcnow() - timedelta(minutes=20))
+    optimizer._last_decisions["d1"] = (8, utcnow_naive() - timedelta(minutes=20))
     after, _, _ = optimizer.evaluate_with_demand(
         _deployment(10), gpus, policy, None, _demand(10.0)[0], _demand(10.0)
     )

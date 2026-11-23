@@ -1,83 +1,39 @@
-schema_version: tesseract.platform.source-manifest.v1
-generated_at: "2026-10-13"
+schema_version: tesseract.platform.source-manifest.v2
+generated_at: "2026-11-23"
 description: >-
-  Pinned source revisions of the Tesseract product repositories that this
-  platform integrates against. Recorded during the Milestone 1 audit. The
-  platform never vendors product code; it integrates through versioned
-  contracts and pinned checkouts.
+  Foundry, Fusion and Adaptive live in this repository under products/ (their
+  histories were merged in). Ignite is the separate kubbernetd-saver repository.
+  The control plane integrates with every product only through the versioned
+  contracts in contracts/; it never imports product internals.
 
 products:
   foundry:
     role: profiling-and-measurement
-    repository: https://github.com/yashlabs-trying/tesseract-foundry
-    visibility: public
-    default_branch: main
-    pinned_commit: b8a70306d2c5d40b73156593987b3c8fab10cd29
-    upstream_main_commit: b8a70306d2c5d40b73156593987b3c8fab10cd29
-    validated_commit: ca2bd6a7a11f30b266b52a23d3e59bd76681afb5
-    fix_branch: fix/pre-gpu-api-blockers
-    fix_pr: https://github.com/yashlabs-trying/tesseract-foundry/pull/1
-    api_blockers_fixed: [F-01, F-02, F-03]
+    path: products/foundry
+    pinned_commit: in-tree
     python_package: foundry
-    python_version: "1.0.0"
     emits_contract: tesseract.performance-profile.v1
-    historical_test_claim: "101/101 passing (not yet reproduced; see docs/AUDIT.md)"
 
   fusion:
     role: placement-and-reservation
-    repository: https://github.com/yashlabs-trying/tesseract-fusion
-    visibility: private
-    default_branch: main
-    pinned_commit: c0f4eb9838c6203e185449989a932475a37ee827
-    upstream_main_commit: c0f4eb9838c6203e185449989a932475a37ee827
+    path: products/fusion
+    pinned_commit: in-tree
     python_package: fusion
-    python_version: "0.1.0"
-    historical_test_claim: "194 passing, 1 skip (not yet reproduced; see docs/AUDIT.md)"
 
   ignite:
     role: deployment-and-routing
     repository: https://github.com/yashlabs-trying/kubbernetd-saver
-    visibility: public
     default_branch: main
-    # Local validated revision, 3 commits ahead of origin/main.
-    pinned_commit: df227307a916a1ec3d3fadab9a28cb2cdb14e911
-    upstream_main_commit: cae22248f0fd3a9f9078af13aa4208950743e602
-    validated_commit: 83742826aa652143aca0fe73cec55156851d212a
-    fix_branch: fix/code-issues
-    fix_pr: https://github.com/yashlabs-trying/kubbernetd-saver/pull/1
+    pinned_commit: IGNITE_COMMIT
     python_package: kubbernetd
-    python_version: "0.1.0"
     crd: replicagroups.kubbernetd.io
-    push_status: >-
-      origin/main is a protected branch requiring the "k8s-e2e" status check.
-      The validated commits are on origin/fix/code-issues (PR #1), which now
-      passes unit-tests and k8s-e2e (all 9 E2E scenarios). PR is CLEAN and
-      MERGEABLE, awaiting authorization.
-    historical_test_claim: "91/91 unit, 15/15 k8s lifecycle, 100/100 cold requests (not yet reproduced)"
 
-future_products:
   adaptive:
     role: adaptive-quantization
-    repository: https://github.com/yashlabs-trying/tesseract-adaptive
-    visibility: private
-    default_branch: main
-    pinned_commit: 2d826c863a209fc1af185db8222c033ea227a7f4
-    upstream_main_commit: 53649fdd39157b4c7c7ecd88010e7ee41290c902
-    validation_branch: validation/mac-m5-audit
+    path: products/adaptive
+    pinned_commit: in-tree
     python_package: adaptive
-    python_version: "0.1.0"
-    status: under-development
     integration: optional-and-disabled
     note: >-
-      Has uncommitted work in progress locally (M3 controller). The platform
-      integrates through an optional AdaptivePrecisionProvider contract and
-      must operate fully when Adaptive is absent.
-
-legacy:
-  foundary:
-    repository: https://github.com/yashlabs-trying/tesseract-foundary
-    pinned_commit: 2fe7a4407d51585c8c8913caaf51f9972c3baab3
-    reason: >-
-      Misspelled legacy repository. Contains a model-serving API (v5.0.0) with
-      no collected tests. NOT the canonical Foundry product. Retained as a
-      possible reference model server; not integrated.
+      The platform integrates through an optional AdaptivePrecisionProvider
+      contract and must operate fully when Adaptive is absent.

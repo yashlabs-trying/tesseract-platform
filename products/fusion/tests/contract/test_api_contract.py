@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 from fusion.api.app import create_app
+from fusion._time import utcnow_naive
 
 
 @pytest.fixture
@@ -114,9 +115,9 @@ class TestForecastAPI:
         from datetime import datetime
         data = {
             "demand_history": [
-                {"deployment_id": "d1", "requests_per_second": 10.0, "measured_at": datetime.utcnow().isoformat()},
-                {"deployment_id": "d1", "requests_per_second": 12.0, "measured_at": datetime.utcnow().isoformat()},
-                {"deployment_id": "d1", "requests_per_second": 8.0, "measured_at": datetime.utcnow().isoformat()},
+                {"deployment_id": "d1", "requests_per_second": 10.0, "measured_at": utcnow_naive().isoformat()},
+                {"deployment_id": "d1", "requests_per_second": 12.0, "measured_at": utcnow_naive().isoformat()},
+                {"deployment_id": "d1", "requests_per_second": 8.0, "measured_at": utcnow_naive().isoformat()},
             ],
             "horizon_hours": 1,
         }

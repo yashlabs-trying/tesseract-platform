@@ -5,6 +5,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Sequence
 from pydantic import BaseModel, Field, model_validator
 import uuid
+from fusion._time import utcnow_naive
 
 
 class Currency(str, Enum):
@@ -103,8 +104,8 @@ class GPUInventory(BaseModel):
     resource_cost_per_hour: Decimal = Field(default=Decimal("0"), ge=0)
     currency: Currency = Currency.USD
     resource_cost_source: str = "manual"
-    observed_at: datetime = Field(default_factory=datetime.utcnow)
-    refresh_timestamp: datetime = Field(default_factory=datetime.utcnow)
+    observed_at: datetime = Field(default_factory=utcnow_naive)
+    refresh_timestamp: datetime = Field(default_factory=utcnow_naive)
 
     @model_validator(mode="after")
     def memory_consistency(self):
@@ -165,7 +166,7 @@ class WorkloadDemand(BaseModel):
     forecast_uncertainty: Optional[float] = None
     time_window_seconds: int = 60
     source: str = "observed"
-    measured_at: datetime = Field(default_factory=datetime.utcnow)
+    measured_at: datetime = Field(default_factory=utcnow_naive)
 
 
 class PerformanceProfile(BaseModel):
@@ -187,7 +188,7 @@ class PerformanceProfile(BaseModel):
     max_concurrency: Optional[int] = None
     memory_usage_mb: Optional[int] = None
     source: str = "manual"
-    measured_at: datetime = Field(default_factory=datetime.utcnow)
+    measured_at: datetime = Field(default_factory=utcnow_naive)
     schema_version: str = "tesseract.performance-profile.v1"
 
 
@@ -213,7 +214,7 @@ class ServiceEconomics(BaseModel):
     amortized_capital_cost: Optional[Decimal] = None
     contractual_penalty_model: Optional[str] = None
     currency: Currency = Currency.USD
-    time_window_start: datetime = Field(default_factory=datetime.utcnow)
+    time_window_start: datetime = Field(default_factory=utcnow_naive)
     time_window_end: Optional[datetime] = None
     assumptions: List[str] = Field(default_factory=list)
     provenance: str = "manual",
@@ -282,7 +283,7 @@ class FusionRecommendation(BaseModel):
     risk_explanation: Optional[str] = None
     approval_status: RecommendationStatus = RecommendationStatus.ADVISORY_ONLY
     execution_eligibility: bool = False
-    evaluated_at: datetime = Field(default_factory=datetime.utcnow)
+    evaluated_at: datetime = Field(default_factory=utcnow_naive)
     provenance: Dict[str, Any] = Field(default_factory=dict)
 
 
@@ -299,7 +300,7 @@ class OptimizationScenario(BaseModel):
     cost_assumptions: Dict[str, Any] = Field(default_factory=dict)
     risk_tolerance: float = 0.1
     scenario_horizon_hours: int = 24
-    evaluated_at: datetime = Field(default_factory=datetime.utcnow)
+    evaluated_at: datetime = Field(default_factory=utcnow_naive)
 
 
 class ForecastResult(BaseModel):
@@ -313,7 +314,7 @@ class ForecastResult(BaseModel):
     seasonality_detected: bool = False
     burst_probability: float = 0.0
     evaluation_score: Optional[float] = None
-    generated_at: datetime = Field(default_factory=datetime.utcnow)
+    generated_at: datetime = Field(default_factory=utcnow_naive)
 
 
 class SimulationState(str, Enum):

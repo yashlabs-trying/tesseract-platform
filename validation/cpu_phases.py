@@ -34,7 +34,7 @@ from tesseract_platform.testing import (
     make_request,
 )
 
-RAW = Path("/home/user/tesseract-platform/reports/raw")
+RAW = Path(__file__).resolve().parents[1] / "reports/raw"
 RAW.mkdir(parents=True, exist_ok=True)
 
 

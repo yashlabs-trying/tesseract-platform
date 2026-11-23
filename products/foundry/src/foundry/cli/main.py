@@ -144,15 +144,17 @@ def economics(
         hw = next((h for h in hardware if h.hardware_id == c.hardware_id), None)
         inp = Decimal(str(data.get("input_price_per_million", 0.15)))
         outp = Decimal(str(data.get("output_price_per_million", 0.60)))
-        if hw:
-            econ = evaluate(c, workload, hw, inp, outp)
         typer.echo(f"\n--- {c.candidate_id} ---")
-        typer.echo(f"  GPU Cost/Month:  ")
-        typer.echo(f"  Total Cost/Month: ")
-        typer.echo(f"  Revenue/Month:    ")
-        typer.echo(f"  Margin:            ({econ.margin_pct:.1f}%)")
-        typer.echo(f"  Cost/1M Input:    ")
-        typer.echo(f"  Cost/1M Output:   ")
+        if hw is None:
+            typer.echo("  No hardware profile matches this candidate; economics not computed.")
+            continue
+        econ = evaluate(c, workload, hw, inp, outp)
+        typer.echo(f"  GPU Cost/Month:   ${econ.allocated_gpu_cost_monthly:,.2f}")
+        typer.echo(f"  Total Cost/Month: ${econ.total_cost_monthly:,.2f}")
+        typer.echo(f"  Revenue/Month:    ${econ.estimated_revenue_monthly:,.2f}")
+        typer.echo(f"  Margin:           ${econ.contribution_margin:,.2f} ({econ.margin_pct:.1f}%)")
+        typer.echo(f"  Cost/1M Input:    ${econ.cost_per_million_input_tokens:,.4f}")
+        typer.echo(f"  Cost/1M Output:   ${econ.cost_per_million_output_tokens:,.4f}")
 
 @app.command()
 def report(

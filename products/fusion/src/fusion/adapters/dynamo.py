@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Any, Dict, List, Optional
 from datetime import datetime
+from fusion._time import utcnow_naive
 
 
 class DynamoMetricsAdapter:
@@ -20,7 +21,7 @@ class DynamoMetricsAdapter:
         normalized = []
         for entry in raw:
             normalized.append({
-                "timestamp": entry.get("timestamp", datetime.utcnow().isoformat()),
+                "timestamp": entry.get("timestamp", utcnow_naive().isoformat()),
                 "metric": entry.get("name", "unknown"),
                 "value": entry.get("value", 0),
                 "labels": entry.get("labels", {}),

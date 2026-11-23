@@ -18,6 +18,7 @@ from fusion.simulator.scenario import ScenarioLoader, ScenarioDefinition
 from fusion.demand.forecaster import DemandForecaster
 from fusion.demand.profile import WorkloadProfileBuilder
 import uuid
+from fusion._time import utcnow_naive
 
 
 def create_app(settings: Optional[Settings] = None) -> FastAPI:
@@ -64,7 +65,7 @@ def create_app(settings: Optional[Settings] = None) -> FastAPI:
 
     @app.get("/healthz")
     async def healthz():
-        return {"status": "ok", "timestamp": datetime.utcnow().isoformat()}
+        return {"status": "ok", "timestamp": utcnow_naive().isoformat()}
 
     @app.get("/readyz")
     async def readyz():

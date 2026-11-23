@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Dict, List, Optional, Protocol, Any
 from fusion.models.types import GPUInventory, HealthStatus, IsolationMode, SharingPolicy, Currency
+from fusion._time import utcnow_naive
 
 
 class InventoryProvider(Protocol):
@@ -28,7 +29,7 @@ class InventoryService:
         self._stale_threshold = stale_threshold_seconds
 
     def get_inventory(self, force_refresh: bool = False) -> List[GPUInventory]:
-        now = datetime.utcnow()
+        now = utcnow_naive()
         if not force_refresh and self._cache_time is not None:
             age = (now - self._cache_time).total_seconds()
             if age < self._stale_threshold:
@@ -65,4 +66,4 @@ class InventoryService:
     def cache_age_seconds(self) -> Optional[float]:
         if self._cache_time is None:
             return None
-        return (datetime.utcnow() - self._cache_time).total_seconds()
+        return (utcnow_naive() - self._cache_time).total_seconds()

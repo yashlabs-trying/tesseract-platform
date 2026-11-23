@@ -30,7 +30,7 @@ from tesseract_platform.testing import (
     make_request,
 )
 
-OUT = Path("/home/user/tesseract-platform/reports/raw/performance_baseline.json")
+OUT = Path(__file__).resolve().parents[1] / "reports/raw/performance_baseline.json"
 
 PROFILE_DOC = {
     "schema_version": "tesseract.performance-profile.v1",

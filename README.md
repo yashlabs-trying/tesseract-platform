@@ -1,76 +1,87 @@
-# Tesseract Platform
+# Tesseract
 
-Unified orchestration and optimization layer connecting three Tesseract
-products into **one functioning system**:
-
-| Product | Repository | Role |
-|---|---|---|
-| **Foundry** | `yashlabs-trying/tesseract-foundry` | Profiling & performance measurement |
-| **Fusion** | `yashlabs-trying/tesseract-fusion` | GPU placement & capacity reservation |
-| **Ignite** | `yashlabs-trying/kubbernetd-saver` | Kubernetes deployment, cold-start & routing |
-| **Adaptive** *(future)* | `yashlabs-trying/tesseract-adaptive` | Adaptive quantization — optional, disabled |
-
-The platform owns the **workload lifecycle**: it turns a customer request into a
-profiled workload, obtains a placement and reservation from Fusion, drives a
-deployment through Ignite, routes traffic only to ready endpoints, collects
-runtime telemetry back into Foundry, and reconciles/rolls back on failure.
+**A control plane for running LLM inference on GPUs at the lowest cost that
+still meets quality and latency targets.** It takes a model and a workload,
+measures it, decides where it should run and at what precision, deploys it,
+scale-to-zero included, and keeps the books on what each decision costs.
 
 ```
-CUSTOMER REQUEST → PLATFORM → Foundry(profile) → Fusion(placement+reservation)
-                → Ignite(deploy/wake/route) → MODEL SERVER → Foundry(telemetry)
-                → OPTIMIZATION CONTROLLER (observe → recommend → act)
+customer request
+   │
+   ▼
+PLATFORM ── profile ──► FOUNDRY   measure the model on candidate GPUs, price it
+   │      ── place ────► FUSION    pick the cheapest feasible GPU placement, reserve it
+   │      ── precision ► ADAPTIVE  choose a quantization profile that passes quality gates (optional)
+   │      ── deploy ───► IGNITE    deploy on Kubernetes, scale to zero, wake on request
+   ▼
+model server ── telemetry ──► FOUNDRY ──► controller: observe → recommend → act / roll back
 ```
+
+| Component | What it does | Where | Tests |
+|---|---|---|---|
+| **Platform** | Workload lifecycle: durable reservation state machine, coordinator, compensating rollback, telemetry loop, REST API | [`tesseract_platform/`](tesseract_platform/) | 81 |
+| **Foundry** | Turns a model + hardware + workload into candidate deployments, benchmarks or simulates them, computes unit economics and a launch recommendation | [`products/foundry/`](products/foundry/) | 47 |
+| **Fusion** | GPU fleet economics: inventory, demand forecast, constraint-checked placement optimizer, simulation | [`products/fusion/`](products/fusion/) | 183 |
+| **Adaptive** | Quality-constrained mixed-precision search: per-layer sensitivity, Pareto optimizer over 4/8-bit profiles, safe runtime switching with rollback | [`products/adaptive/`](products/adaptive/) | 254 |
+| **Ignite** | Kubernetes scale-to-zero for model servers with a buffering proxy | [kubbernetd-saver](https://github.com/yashlabs-trying/kubbernetd-saver) | 77 + 9 kind E2E |
+
+All suites run on CPU in CI (no GPU needed). The control plane talks to every
+product only through the versioned JSON-Schema contracts in
+[`contracts/`](contracts/), so each product can be replaced or run alone.
 
 ## Status
 
-Milestone 1 (audit + contracts) and Milestone 2 (real integration, coordinator,
-reservation lifecycle, telemetry, rollback) are implemented and covered by
-unit, contract and in-process integration tests. Kubernetes and GPU validation
-are **pending** — see `docs/MAC_VALIDATION.md` and `docs/GPU_VALIDATION.md`.
-
-The pinned product revisions live in [`platform.manifest.yaml`](platform.manifest.yaml).
+- **Done:** contracts, coordinator, reservation lifecycle, rollback, telemetry,
+  and the four products, all covered by unit, contract, property-based and
+  in-process integration tests; Ignite's scale-to-zero path is exercised on a
+  real kind cluster in CI.
+- **Not yet done:** a measured end-to-end run on real GPUs. Foundry's numbers
+  in fixture mode are synthetic and labelled as such: its recommender refuses
+  to launch on unverified evidence. The plan for that run is in
+  [`docs/GPU_VALIDATION.md`](docs/GPU_VALIDATION.md).
 
 ## Quick start
 
 ```bash
 pip install -e ".[test]"
-pytest
-```
+pip install -e products/foundry -e products/fusion -e products/adaptive
+pytest                                   # control plane
 
-Run the control-plane API:
+foundry economics products/foundry/fixtures/scenario-1-single-gpu.yaml
+foundry recommend products/foundry/fixtures/scenario-1-single-gpu.yaml
+fusion optimize products/fusion/fixtures/fleet.yaml
+adaptive analyze products/adaptive/fixtures/models/llama-3.2-1b.json
 
-```bash
-tesseract-platform serve            # or: uvicorn tesseract_platform.api.app:app
+tesseract-platform serve                 # control-plane API
 ```
 
 ## Layout
 
 ```
-tesseract_platform/     Control plane: coordinator, reservation state machine,
-                        durable state store, policies, observability/controller, API.
-integrations/           Versioned adapters: foundry, fusion, ignite, adaptive.
-contracts/              JSON Schema contracts shared across products.
-deployments/            docker-compose, Kubernetes, Helm, kind.
-benchmarks/             Benchmark scenarios, baselines and reports.
-tests/                  unit, contracts, integration, e2e, concurrency, chaos, performance.
-docs/                   Architecture, integration contracts, audit, validation plans.
+tesseract_platform/   control plane: coordinator, state machine, store, policies, API
+integrations/         adapters for foundry, fusion, ignite, adaptive
+contracts/            JSON-Schema contracts shared across products
+products/             foundry, fusion, adaptive (each its own package and tests)
+deployments/          docker-compose, Kubernetes, Helm, kind
+benchmarks/           control-plane benchmark scenarios and baselines
+validation/           CPU validation campaign scripts
+docs/                 architecture, contracts, operations, validation plans
+reports/              validation reports and raw logs
 ```
 
-> **Naming note.** The control-plane package is `tesseract_platform/`, not
-> `platform/`, because a top-level package named `platform` would shadow the
-> Python standard-library `platform` module (imported by httpx/uvicorn).
+The control-plane package is `tesseract_platform/`, not `platform/`, because a
+top-level package named `platform` would shadow Python's standard library.
 
 ## Design principles
 
-- **No product code is vendored.** Integration is through versioned contracts
-  and pinned checkouts.
-- **Never assume** Foundry emits placement or Ignite accepts reservations —
-  those contracts are defined here.
-- **Durable state machine**, not a single database transaction, spans Fusion and
-  Kubernetes. Failures trigger explicit compensating actions.
-- **Adaptive is optional.** The platform passes contract tests proving it works
-  with Adaptive absent.
+- **Contracts, not imports.** Products are developed together here, but the
+  control plane depends only on contracts, never on product internals.
+- **Durable state machine** spanning Fusion and Kubernetes instead of one
+  database transaction; every failure has an explicit compensating action.
+- **Evidence before claims.** Synthetic or estimated numbers are labelled and
+  cannot drive a launch decision.
+- **Adaptive is optional.** Contract tests prove the platform works without it.
 
 ## License
 
-MIT
+MIT © Yashvardhan Singh Shekhawat

@@ -2,6 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from sqlalchemy import Column, String, Integer, Float, DateTime, Text, Enum, Boolean, JSON, Numeric
 from fusion.database.session import Base
+from fusion._time import utcnow_naive
 
 
 class GPUInventoryORM(Base):
@@ -23,8 +24,8 @@ class GPUInventoryORM(Base):
     resource_cost_per_hour = Column(Numeric(12, 4), default=0)
     currency = Column(String, default="USD")
     resource_cost_source = Column(String, default="manual")
-    observed_at = Column(DateTime, default=datetime.utcnow)
-    refresh_timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    observed_at = Column(DateTime, default=utcnow_naive)
+    refresh_timestamp = Column(DateTime, default=utcnow_naive, onupdate=utcnow_naive)
 
 
 class TenantPolicyORM(Base):
@@ -78,7 +79,7 @@ class WorkloadDemandORM(Base):
     forecast_uncertainty = Column(Float, nullable=True)
     time_window_seconds = Column(Integer, default=60)
     source = Column(String, default="observed")
-    measured_at = Column(DateTime, default=datetime.utcnow)
+    measured_at = Column(DateTime, default=utcnow_naive)
 
 
 class PerformanceProfileORM(Base):
@@ -100,7 +101,7 @@ class PerformanceProfileORM(Base):
     max_concurrency = Column(Integer, nullable=True)
     memory_usage_mb = Column(Integer, nullable=True)
     source = Column(String, default="manual")
-    measured_at = Column(DateTime, default=datetime.utcnow)
+    measured_at = Column(DateTime, default=utcnow_naive)
     schema_version = Column(String, default="tesseract.performance-profile.v1")
 
 
@@ -126,7 +127,7 @@ class ServiceEconomicsORM(Base):
     amortized_capital_cost = Column(Numeric(14, 4), nullable=True)
     contractual_penalty_model = Column(String, nullable=True)
     currency = Column(String, default="USD")
-    time_window_start = Column(DateTime, default=datetime.utcnow)
+    time_window_start = Column(DateTime, default=utcnow_naive)
     time_window_end = Column(DateTime, nullable=True)
     assumptions = Column(JSON, default=[])
     provenance = Column(String, default="manual")
@@ -145,7 +146,7 @@ class OptimizationScenarioORM(Base):
     cost_assumptions = Column(JSON, default={})
     risk_tolerance = Column(Float, default=0.1)
     scenario_horizon_hours = Column(Integer, default=24)
-    evaluated_at = Column(DateTime, default=datetime.utcnow)
+    evaluated_at = Column(DateTime, default=utcnow_naive)
 
 
 class FusionRecommendationORM(Base):
@@ -166,7 +167,7 @@ class FusionRecommendationORM(Base):
     risk_explanation = Column(Text, nullable=True)
     approval_status = Column(String, default="advisory_only")
     execution_eligibility = Column(Boolean, default=False)
-    evaluated_at = Column(DateTime, default=datetime.utcnow)
+    evaluated_at = Column(DateTime, default=utcnow_naive)
     provenance = Column(JSON, default={})
 
 

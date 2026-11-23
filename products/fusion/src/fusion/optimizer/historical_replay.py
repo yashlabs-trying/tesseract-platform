@@ -8,6 +8,7 @@ from fusion.models.types import (
     ExpectedOutcome, AllocationStatus, SimulationResult,
     SimulationState, DeploymentAlternative,
 )
+from fusion._time import utcnow_naive
 
 
 class HistoricalReplayEngine:
@@ -32,7 +33,7 @@ class HistoricalReplayEngine:
             },
         )
         result.state = SimulationState.RUNNING
-        result.started_at = datetime.utcnow()
+        result.started_at = utcnow_naive()
 
         # Track baseline and candidate separately
         baseline_metrics = self._simulate_allocation(
@@ -53,10 +54,10 @@ class HistoricalReplayEngine:
         result.total_contribution = candidate_metrics["total_revenue"] - candidate_metrics["total_cost"]
         result.scaling_events = candidate_metrics["scaling_events"]
         result.state = SimulationState.COMPLETED
-        result.completed_at = datetime.utcnow()
+        result.completed_at = utcnow_naive()
 
         result.events.append({
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": utcnow_naive().isoformat(),
             "event_type": "replay_comparison",
             "description": "Baseline vs Candidate comparison completed",
             "details": {
@@ -150,7 +151,7 @@ class HistoricalReplayEngine:
         lines = []
         lines.append("# Tesseract Fusion — Historical Replay Audit Report")
         lines.append("")
-        lines.append(f"**Generated:** {datetime.utcnow().isoformat()}")
+        lines.append(f"**Generated:** {utcnow_naive().isoformat()}")
         lines.append("")
         lines.append("## Baseline (Current Allocation)")
         lines.append("")

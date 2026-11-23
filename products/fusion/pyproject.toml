@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "tesseract-fusion"
 version = "0.1.0"
 description = "GPU fleet economics and optimization platform"
-authors = [{name = "Tesseract Fusion Team"}]
+authors = [{name = "Yashvardhan Singh Shekhawat", email = "novalabs0.ai@gmail.com"}]
 license = {text = "MIT"}
 requires-python = ">=3.11"
 dependencies = [

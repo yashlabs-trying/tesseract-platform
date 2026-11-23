@@ -11,6 +11,7 @@ from fusion.models.types import (
 from fusion.simulator.scenario import ScenarioDefinition, SimulatedWorkload
 from fusion.economics.accounting import CostAccountingEngine
 from fusion.policies.validator import ConstraintValidator
+from fusion._time import utcnow_naive
 
 
 class FleetSimulator:
@@ -26,20 +27,20 @@ class FleetSimulator:
         alternative: Optional[List[DeploymentAlternative]] = None,
     ) -> SimulationResult:
         result = SimulationResult(
-            simulation_id=f"sim-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{self._seed}",
+            simulation_id=f"sim-{utcnow_naive().strftime('%Y%m%d%H%M%S')}-{self._seed}",
             scenario_name=scenario.name,
             seed=self._seed,
             config=scenario.model_dump(),
         )
         result.state = SimulationState.RUNNING
-        result.started_at = datetime.utcnow()
+        result.started_at = utcnow_naive()
 
         gpus = self._build_gpu_pool(scenario)
         gpu_allocations: Dict[str, Optional[str]] = {g.gpu_id: None for g in gpus}
 
         total_time_steps = int(scenario.duration_hours * 3600 / scenario.dt_seconds)
         result.events.append(SimulationEvent(
-            timestamp=datetime.utcnow(),
+            timestamp=utcnow_naive(),
             event_type="simulation_start",
             description=f"Starting {scenario.name} with {len(gpus)} GPUs, {len(scenario.workloads)} workloads",
         ))
@@ -99,10 +100,10 @@ class FleetSimulator:
 
         result.total_contribution = result.total_revenue - result.total_cost
         result.state = SimulationState.COMPLETED
-        result.completed_at = datetime.utcnow()
+        result.completed_at = utcnow_naive()
 
         result.events.append(SimulationEvent(
-            timestamp=datetime.utcnow(),
+            timestamp=utcnow_naive(),
             event_type="simulation_complete",
             description=f"Completed: {result.completed_requests} requests, {result.total_gpu_hours:.1f} GPU-hours",
             details={

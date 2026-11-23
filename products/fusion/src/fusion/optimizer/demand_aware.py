@@ -12,6 +12,7 @@ from fusion.optimizer.candidate import CandidateGenerator
 from fusion.optimizer.evaluator import AlternativeEvaluator
 from fusion.policies.validator import ConstraintValidator
 from fusion.economics.accounting import CostAccountingEngine
+from fusion._time import utcnow_naive
 
 
 class DemandAwareOptimizer:
@@ -80,7 +81,7 @@ class DemandAwareOptimizer:
             dep_id = deployment.deployment_id
             if dep_id in self._last_decisions:
                 last_count, last_time = self._last_decisions[dep_id]
-                if (datetime.utcnow() - last_time) < self._min_decision_interval:
+                if (utcnow_naive() - last_time) < self._min_decision_interval:
                     if abs(alt.replica_count - last_count) / max(last_count, 1) < self._hysteresis_threshold:
                         continue
 
@@ -109,7 +110,7 @@ class DemandAwareOptimizer:
         if best_alt and best_outcome and best_alt.gpu_pool_id != "__baseline__":
             self._last_decisions[deployment.deployment_id] = (
                 best_alt.replica_count,
-                datetime.utcnow(),
+                utcnow_naive(),
             )
 
         return best_alt, best_outcome, reason

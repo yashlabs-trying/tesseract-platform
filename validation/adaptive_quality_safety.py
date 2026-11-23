@@ -10,8 +10,8 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-CONFIG = Path("/home/user/tesseract-adaptive/fixtures/models/qwen3-0.6b.json")
-OUT = Path("/home/user/tesseract-platform/reports/raw/adaptive_quality_safety.json")
+CONFIG = Path(__file__).resolve().parents[1] / "products/adaptive/fixtures/models/qwen3-0.6b.json"
+OUT = Path(__file__).resolve().parents[1] / "reports/raw/adaptive_quality_safety.json"
 
 from adaptive.analyzer import ModelAnalyzer  # noqa: E402
 from adaptive.errors import CompatibilityError  # noqa: E402
