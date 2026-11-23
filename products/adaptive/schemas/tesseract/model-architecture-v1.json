@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.model-architecture.v1",
+  "title": "Tesseract Adaptive Model Architecture",
+  "description": "Normalized architecture description produced by the Model Analyzer.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "model_id",
+    "model_type",
+    "family",
+    "hidden_size",
+    "intermediate_size",
+    "num_layers",
+    "num_attention_heads",
+    "num_key_value_heads",
+    "head_dim",
+    "vocab_size",
+    "baseline_dtype",
+    "total_parameters",
+    "baseline_weight_bytes",
+    "structural_fingerprint"
+  ],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.model-architecture.v1" },
+    "model_id": { "type": "string" },
+    "model_type": { "type": "string" },
+    "family": {
+      "enum": ["llama", "qwen2", "qwen3", "mistral", "unknown"]
+    },
+    "revision": { "type": ["string", "null"] },
+    "hidden_size": { "type": "integer", "minimum": 1 },
+    "intermediate_size": { "type": "integer", "minimum": 1 },
+    "num_layers": { "type": "integer", "minimum": 1 },
+    "num_attention_heads": { "type": "integer", "minimum": 1 },
+    "num_key_value_heads": { "type": "integer", "minimum": 1 },
+    "head_dim": { "type": "integer", "minimum": 1 },
+    "vocab_size": { "type": "integer", "minimum": 1 },
+    "max_position_embeddings": { "type": "integer", "minimum": 0 },
+    "tie_word_embeddings": { "type": "boolean" },
+    "baseline_dtype": { "enum": ["fp32", "fp16", "bf16"] },
+    "total_parameters": { "type": "integer", "minimum": 1 },
+    "quantizable_parameters": { "type": "integer", "minimum": 0 },
+    "baseline_weight_bytes": { "type": "integer", "minimum": 1 },
+    "structural_fingerprint": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

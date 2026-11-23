@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.placement-recommendation.v1",
+  "title": "Tesseract Adaptive Placement Recommendation",
+  "description": "Precision recommendation and capacity projection for Fusion.",
+  "type": "object",
+  "required": ["schema_version", "deployment_id", "model_id", "feasible"],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.placement-recommendation.v1" },
+    "deployment_id": { "type": "string" },
+    "model_id": { "type": "string" },
+    "recommended_profile_id": { "type": ["string", "null"] },
+    "replicas_per_gpu": { "type": "integer", "minimum": 0 },
+    "projected_capacity": { "type": "integer", "minimum": 0 },
+    "baseline_capacity": { "type": "integer", "minimum": 0 },
+    "capacity_improvement": { "type": "number", "minimum": 0 },
+    "feasible": { "type": "boolean" },
+    "reason": { "type": "string" },
+    "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.precision-profile.v1",
+  "title": "Tesseract Adaptive Precision Profile",
+  "description": "Layer-wise precision assignment for a model and runtime.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "profile_id",
+    "name",
+    "runtime",
+    "method",
+    "deployable",
+    "evidence",
+    "default_config",
+    "assignments"
+  ],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.precision-profile.v1" },
+    "profile_id": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "runtime": {
+      "enum": [
+        "torch_eager",
+        "torch_compile",
+        "mps",
+        "cuda",
+        "vllm",
+        "sglang",
+        "tensorrt_llm",
+        "llama_cpp"
+      ]
+    },
+    "method": {
+      "enum": [
+        "reference",
+        "gptq",
+        "awq",
+        "bitsandbytes_int8",
+        "bitsandbytes_nf4",
+        "fp8",
+        "gguf"
+      ]
+    },
+    "deployable": { "type": "boolean" },
+    "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] },
+    "default_config": { "$ref": "#/definitions/quant_config" },
+    "assignments": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/quant_config" }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "quant_config": {
+      "type": "object",
+      "required": ["bits", "dtype", "scheme", "granularity", "method"],
+      "properties": {
+        "bits": { "enum": [4, 8, 16, 32] },
+        "dtype": {
+          "enum": ["fp32", "fp16", "bf16", "fp8_e4m3", "fp8_e5m2", "int8", "int4", "uint8"]
+        },
+        "scheme": { "enum": ["symmetric", "asymmetric"] },
+        "granularity": { "enum": ["per_tensor", "per_channel", "per_group"] },
+        "group_size": { "type": ["integer", "null"], "minimum": 1 },
+        "method": {
+          "enum": [
+            "reference",
+            "gptq",
+            "awq",
+            "bitsandbytes_int8",
+            "bitsandbytes_nf4",
+            "fp8",
+            "gguf"
+          ]
+        },
+        "scale_dtype": {
+          "enum": ["fp32", "fp16", "bf16", "fp8_e4m3", "fp8_e5m2", "int8", "int4", "uint8"]
+        },
+        "zero_point_dtype": {
+          "enum": ["fp32", "fp16", "bf16", "fp8_e4m3", "fp8_e5m2", "int8", "int4", "uint8"]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

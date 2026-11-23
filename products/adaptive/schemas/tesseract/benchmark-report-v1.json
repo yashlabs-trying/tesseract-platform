@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.benchmark-report.v1",
+  "title": "Tesseract Adaptive Benchmark Report",
+  "description": "Reproducible benchmark report built only from measured/validated data.",
+  "type": "object",
+  "required": ["schema_version", "model_id", "evidence", "measurements", "summaries"],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.benchmark-report.v1" },
+    "model_id": { "type": "string" },
+    "generated_by": { "type": "string" },
+    "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] },
+    "measurements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["profile_id", "model_id", "evidence", "provenance"],
+        "properties": {
+          "profile_id": { "type": "string" },
+          "model_id": { "type": "string" },
+          "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] },
+          "provenance": { "type": "object", "required": ["source"] }
+        }
+      }
+    },
+    "summaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["profile_id", "evidence"],
+        "properties": {
+          "profile_id": { "type": "string" },
+          "engine": { "type": "string" },
+          "hardware_gpu_model": { "type": "string" },
+          "ttft_p95_ms": { "type": ["number", "null"] },
+          "itl_p95_ms": { "type": ["number", "null"] },
+          "throughput_tps": { "type": ["number", "null"] },
+          "evidence": { "enum": ["synthetic", "estimated", "measured", "validated"] }
+        }
+      }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

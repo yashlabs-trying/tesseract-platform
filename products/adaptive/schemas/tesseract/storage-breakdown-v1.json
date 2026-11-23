@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "tesseract.adaptive.storage-breakdown.v1",
+  "title": "Tesseract Adaptive Storage Breakdown",
+  "description": "Serialized storage accounting for a precision profile.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "model_id",
+    "profile_id",
+    "baseline_bytes",
+    "quantized_bytes",
+    "breakdown"
+  ],
+  "properties": {
+    "schema_version": { "const": "tesseract.adaptive.storage-breakdown.v1" },
+    "model_id": { "type": "string" },
+    "structural_fingerprint": { "type": "string" },
+    "profile_id": { "type": "string" },
+    "baseline_bytes": { "type": "integer", "minimum": 0 },
+    "quantized_bytes": { "type": "integer", "minimum": 0 },
+    "compression_ratio": { "type": "number", "minimum": 0 },
+    "breakdown": {
+      "type": "object",
+      "required": ["parameter_bytes", "total_bytes", "baseline_bytes"],
+      "properties": {
+        "parameter_bytes": { "type": "integer", "minimum": 0 },
+        "scale_bytes": { "type": "integer", "minimum": 0 },
+        "zero_point_bytes": { "type": "integer", "minimum": 0 },
+        "metadata_bytes": { "type": "integer", "minimum": 0 },
+        "unquantized_bytes": { "type": "integer", "minimum": 0 },
+        "total_bytes": { "type": "integer", "minimum": 0 },
+        "baseline_bytes": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

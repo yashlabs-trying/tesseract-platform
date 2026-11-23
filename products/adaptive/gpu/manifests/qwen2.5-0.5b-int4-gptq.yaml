@@ -1,0 +1,26 @@
+schema_version: tesseract.adaptive.gpu-test-manifest.v1
+name: qwen2.5-0.5b-int4-gptq
+model_id: Qwen/Qwen2.5-0.5B
+model_revision: main
+profile:
+  bits: 4
+  method: gptq
+  group_size: 128
+  scheme: symmetric
+  granularity: per_group
+hardware:
+  gpu_model: NVIDIA A10G
+  gpu_count: 1
+  vram_gb: 24.0
+workload:
+  concurrency: 16
+  input_tokens: 512
+  output_tokens: 128
+thresholds:
+  ttft_p95_ms: 120.0
+  itl_p95_ms: 25.0
+  min_throughput_tps: 1000.0
+  max_perplexity_degradation: 0.02
+calibration_dataset: calibration-wikitext-128
+evaluation_dataset: evaluation-wikitext-512
+seed: 0
