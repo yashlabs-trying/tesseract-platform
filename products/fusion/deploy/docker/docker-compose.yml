@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  fusion:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    ports:
+      - "8100:8100"
+    environment:
+      FUSION_HOST: "0.0.0.0"
+      FUSION_PORT: 8100
+      FUSION_DATABASE_URL: "sqlite:///data/fusion.db"
+      FUSION_LOG_LEVEL: "INFO"
+      FUSION_ADVISORY_MODE: "true"
+    volumes:
+      - fusion_data:/app/data
+      - ../../fixtures:/app/fixtures
+
+volumes:
+  fusion_data:

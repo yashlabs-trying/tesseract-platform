@@ -1,0 +1,25 @@
+name: single-gpu
+description: Single GPU test scenario
+seed: 42
+duration_hours: 1.0
+gpu_pools:
+  - gpu_model: A100
+    count: 1
+    memory_capacity_mb: 81920
+    cost_per_hour: 3.00
+    interconnect: nvlink
+    supported_isolation: [exclusive]
+workloads:
+  - name: single-model
+    model_id: test-model
+    tenant_id: single-tenant
+    priority: 5
+    base_rps: 5.0
+    burst_multiplier: 1.0
+    burst_probability: 0.0
+    expected_memory_mb: 40960
+    min_replicas: 1
+    max_replicas: 1
+    isolation_requirement: exclusive
+    warm_workers: 1
+    scale_to_zero_eligible: false
