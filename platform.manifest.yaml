@@ -24,7 +24,7 @@ products:
     role: deployment-and-routing
     repository: https://github.com/yashlabs-trying/kubbernetd-saver
     default_branch: main
-    pinned_commit: IGNITE_COMMIT
+    pinned_commit: main
     python_package: kubbernetd
     crd: replicagroups.kubbernetd.io
 
