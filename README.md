@@ -1,5 +1,10 @@
 # Tesseract
 
+[![CI](https://github.com/yashlabs-trying/tesseract-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/yashlabs-trying/tesseract-platform/actions/workflows/ci.yml)
+[![Products](https://github.com/yashlabs-trying/tesseract-platform/actions/workflows/products.yml/badge.svg)](https://github.com/yashlabs-trying/tesseract-platform/actions/workflows/products.yml)
+[![Security](https://github.com/yashlabs-trying/tesseract-platform/actions/workflows/security.yml/badge.svg)](https://github.com/yashlabs-trying/tesseract-platform/actions/workflows/security.yml)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 **A control plane for running LLM inference on GPUs at the lowest cost that
 still meets quality and latency targets.** It takes a model and a workload,
 measures it, decides where it should run and at what precision, deploys it,
